@@ -1,0 +1,61 @@
+@media screen and (max-width: 420px) {
+  .switcher {
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .switcher2 {
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .blurb-width {
+    width: 80%;
+  }
+
+  .h3,
+  h3 {
+    font-size: 1.365rem !important;
+  }
+
+  .h5,
+  h5 {
+    font-size: 0.875rem !important;
+  }
+
+  .phone {
+    height: 42vh;
+  }
+
+  .phone-single {
+    height: 45vh;
+  }
+}
+
+@media (min-width: 421px) {
+  .switcher {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .switcher2 {
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .blurb-width {
+    width: 50%;
+  }
+
+  .phone {
+    height: 80vh;
+  }
+
+  .phone-single {
+    height: 80vh;
+  }
+}
