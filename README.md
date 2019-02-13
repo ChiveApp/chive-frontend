@@ -1,3 +1,10 @@
+# chive
+
+## Workflow
+
+1. Make a branch from chive/dev for your feature
+2. Develop Feature and according react-test
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Available Scripts
