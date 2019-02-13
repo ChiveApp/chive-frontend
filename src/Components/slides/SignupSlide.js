@@ -16,7 +16,7 @@ class SignupSlide extends Component {
     return (
       <Element name={`scrollElement${this.id}`}>
         <div
-          className={"d-flex justify-content-center align-items-center"}
+          className="d-flex justify-content-center align-items-center"
           style={{
             height: "100vh",
             backgroundImage: `url(${this.backgroundImage})`,
@@ -25,9 +25,7 @@ class SignupSlide extends Component {
           id={this.id}
         >
           <div
-            className={
-              "d-flex flex-column flex-fill justify-content-center align-items-center"
-            }
+            className="d-flex flex-column flex-fill justify-content-center align-items-center"
             style={{
               height: "100vh",
               backgroundColor: `rgba(0, 0, 0, ${this.opacity}`

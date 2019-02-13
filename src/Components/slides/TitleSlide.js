@@ -17,9 +17,7 @@ class TitleSlide extends Component {
   render() {
     return (
       <div
-        className={
-          "d-flex flex-grow-1 justify-content-center align-items-center"
-        }
+        className="d-flex justify-content-center align-items-center"
         style={{
           height: "100vh",
           backgroundImage: `url(${this.backgroundImage})`,
@@ -28,7 +26,7 @@ class TitleSlide extends Component {
         id={this.id}
       >
         <div
-          className={"d-flex flex-fill flex-column align-items-center"}
+          className="d-flex flex-fill flex-column align-items-center"
           style={{
             height: "100vh",
             backgroundColor: `rgba(0, 0, 0, ${this.opacity}`
