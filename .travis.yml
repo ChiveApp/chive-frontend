@@ -33,8 +33,7 @@ jobs:
           local_dir: build
           skip_cleanup: true
           region: "us-west-1"
-          on:
-            branch: demo
+
       after_deploy:
         - travis-ci-cloudfront-invalidation -a $AWS_ACCESS_ID -s $AWS_SECRET_ID -c $CLOUDFRONT_DIST_ID_DEMO -i '/*' -b $TRAVIS_BRANCH -p $TRAVIS_PULL_REQUEST
 
@@ -52,7 +51,6 @@ jobs:
           local_dir: build
           skip_cleanup: true
           region: "us-west-1"
-          on:
-            branch: demo
+
       after_deploy:
         - travis-ci-cloudfront-invalidation -a $AWS_ACCESS_ID -s $AWS_SECRET_ID -c $CLOUDFRONT_DIST_ID_PRODUCTION -i '/*' -b $TRAVIS_BRANCH -p $TRAVIS_PULL_REQUEST
