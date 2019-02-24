@@ -32,7 +32,7 @@ jobs:
           bucket: "chive-app-demo"
           local_dir: build
           skip_cleanup: true
-          region: "us-west-1"
+          region: "us-east-1"
 
       after_deploy:
         - travis-ci-cloudfront-invalidation -a $AWS_ACCESS_ID -s $AWS_SECRET_ID -c $CLOUDFRONT_DIST_ID_DEMO -i '/*' -b $TRAVIS_BRANCH -p $TRAVIS_PULL_REQUEST
@@ -50,7 +50,7 @@ jobs:
           bucket: "chive-app-prod"
           local_dir: build
           skip_cleanup: true
-          region: "us-west-1"
+          region: "us-east-1"
 
       after_deploy:
         - travis-ci-cloudfront-invalidation -a $AWS_ACCESS_ID -s $AWS_SECRET_ID -c $CLOUDFRONT_DIST_ID_PRODUCTION -i '/*' -b $TRAVIS_BRANCH -p $TRAVIS_PULL_REQUEST
