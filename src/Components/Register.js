@@ -1,6 +1,15 @@
-import React, { Component } from "react";
-import { Form, FormGroup, FormText, Label, Input, Button } from "reactstrap";
+import React, { Component, Fragment } from "react";
+import {
+  Form,
+  FormGroup,
+  Label,
+  Input,
+  Button,
+  UncontrolledTooltip
+} from "reactstrap";
 import { Link } from "react-router-dom";
+import Navbar from "./Navbar";
+import passwordvalidator from "password-validator";
 
 /**
  * The Component is a class that can have a state
@@ -13,15 +22,31 @@ class Register extends Component {
   constructor(props) {
     super(props);
 
+    this.passwordSchema = new passwordvalidator();
+
+    this.passwordSchema
+      .is()
+      .min(8)
+      .is()
+      .max(100)
+      .has()
+      .uppercase()
+      .has()
+      .lowercase()
+      .has()
+      .digits()
+      .has()
+      .symbols()
+      .has()
+      .not()
+      .spaces();
+
     this.state = {
       email: "",
       password: "",
       name: "",
-      lowerColor: "white",
-      upperColor: "white",
-      numberColor: "white",
-      symbolColor: "white",
-      lengthColor: "white"
+      tooltipIsOpen: false,
+      tooltipText: ""
     };
 
     // We can attach our own functions by binding them to the class
@@ -39,7 +64,8 @@ class Register extends Component {
    */
   handleSubmit(event) {
     event.preventDefault();
-    alert("Submit!");
+    alert("Authentication coming soon!");
+    // Do checking for valid inputs (email and name and pass)
     // Do graphql user stuff
   }
 
@@ -73,20 +99,54 @@ class Register extends Component {
   updatePassword(event) {
     var password = event.target.value;
 
-    var lowerColor = /[a-z]/.test(password) ? "white" : "red";
-    var upperColor = /[A-Z]/.test(password) ? "white" : "red";
-    var numberColor = /[0-9]/.test(password) ? "white" : "red";
-    var symbolColor = /[$-/:-?{-~!"^_`]/.test(password) ? "white" : "red";
-    var lengthColor = password.length >= 8 ? "white" : "red";
+    console.log(password);
+
+    var failed = this.passwordSchema.validate(password, { list: true });
+
+    if (failed.length > 0 && password.length !== 0) {
+      var error = failed.slice(-1)[0];
+      var errorMessage = "";
+      switch (error) {
+        case "spaces":
+          errorMessage = "No spaces in passwords";
+          break;
+        case "lowercase":
+          errorMessage = "You need a lowercase letter";
+          break;
+        case "uppercase":
+          errorMessage = "You need an uppercase letter";
+          break;
+        case "digits":
+          errorMessage = "You need a number";
+          break;
+        case "symbols":
+          errorMessage = "You need a symbol";
+          break;
+        case "min":
+        case "max":
+          errorMessage = "Passwords must be 8 to 100 characters";
+          break;
+        default:
+          console.log(failed);
+      }
+
+      this.setState({
+        tooltipIsOpen: true,
+        tooltipText: errorMessage
+      });
+    } else {
+      this.setState({
+        tooltipIsOpen: false
+      });
+    }
 
     this.setState({
-      password: password,
-      lowerColor: lowerColor,
-      upperColor: upperColor,
-      numberColor: numberColor,
-      symbolColor: symbolColor,
-      lengthColor: lengthColor
+      password: password
     });
+
+    if (event.charCode === 13) {
+      this.handleSubmit(event);
+    }
   }
 
   /**
@@ -99,79 +159,77 @@ class Register extends Component {
    */
   render() {
     return (
-      <div
-        className="d-flex justify-content-center align-items-center"
-        style={{
-          height: "100vh"
-        }}
-      >
-        <div className="d-flex flex-column justify-content-center align-items-center">
-          <img
-            className="border rounded border-dark"
-            src="images/logo.png"
-            alt="chive logo"
-            style={{ width: "50%" }}
-          />
-          <br />
-          {/* You can attach a function to the class and use it as a function for an element */}
-          <Form onSubmit={this.handleSubmit}>
-            <FormGroup>
-              <Label for="email">Email</Label>
-              <Input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="foodie67@chive.com"
-                onChange={this.updateEmail}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="name">Name</Label>
-              <Input
-                type="name"
-                name="name"
-                id="name"
-                placeholder="John Appleseed"
-                onChange={this.updateName}
-              />
-            </FormGroup>
-            <FormGroup>
-              <Label for="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="secretPassword5!"
-                onChange={this.updatePassword}
-              />
-              <FormText
-                className="d-flex justify-content-between"
-                style={{
-                  userSelect: "none",
-                  MozUserSelect: "none",
-                  WebkitUserSelect: "none",
-                  msUserSelect: "none"
-                }}
-              >
-                {/* You can use javascript variables but only if they are between curly braces.
-                        Each one of these styles is an object {} (like state) */}
-                <span style={{ color: this.state.lowerColor }}>lower </span>
-                <span style={{ color: this.state.upperColor }}>upper </span>
-                <span style={{ color: this.state.numberColor }}>number </span>
-                <span style={{ color: this.state.symbolColor }}>symbol </span>
-                <span style={{ color: this.state.lengthColor }}>length</span>
-              </FormText>
-            </FormGroup>
-            <Button onClick={this.handleSubmit} style={{ width: "100%" }}>
-              Register!
-            </Button>
-          </Form>
-          <Link to="/signin">
-            <br />
-            Already have an account?
-          </Link>
+      <Fragment>
+        <div
+          className="d-flex flex-column"
+          style={{
+            height: "100vh"
+          }}
+        >
+          <Navbar />
+          <div className="d-flex flex-column flex-fill justify-content-center align-items-center">
+            {/* You can attach a function to the class and use it as a function for an element */}
+            <Form
+              onSubmit={this.handleSubmit}
+              style={{ minWidth: "20%" }}
+              autoComplete="off"
+            >
+              <div className="d-flex align-items-center justify-content-center">
+                <img
+                  src="images/chivelogo.svg"
+                  alt="chive logo"
+                  style={{ width: "50%" }}
+                />
+              </div>
+              <br />
+              <FormGroup>
+                <Label for="email">Email</Label>
+                <Input
+                  type="email"
+                  name="email"
+                  id="email"
+                  placeholder="foodie67@chive.com"
+                  onChange={this.updateEmail}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="name">Name</Label>
+                <Input
+                  type="name"
+                  name="name"
+                  id="name"
+                  placeholder="John Appleseed"
+                  onChange={this.updateName}
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="password">Password</Label>
+                <Input
+                  type="password"
+                  name="password"
+                  id="password"
+                  placeholder="secretPassword5!"
+                  onChange={this.updatePassword}
+                />
+                <UncontrolledTooltip
+                  placement="auto-end"
+                  isOpen={this.state.tooltipIsOpen}
+                  target="password"
+                >
+                  {this.state.tooltipText}
+                </UncontrolledTooltip>
+              </FormGroup>
+              <Button onClick={this.handleSubmit} style={{ width: "100%" }}>
+                Register!
+              </Button>
+            </Form>
+            <Link to="/signin">
+              <br />
+              Already have an account?
+            </Link>
+          </div>
         </div>
-      </div>
+      </Fragment>
     );
   }
 }
