@@ -99,8 +99,6 @@ class Register extends Component {
   updatePassword(event) {
     var password = event.target.value;
 
-    console.log(password);
-
     var failed = this.passwordSchema.validate(password, { list: true });
 
     if (failed.length > 0 && password.length !== 0) {
