@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 
 import TitleSlide from "./TitleSlide";
 import PreviewSlide from "./PreviewSlide";
@@ -77,7 +77,7 @@ class Landing extends Component {
     pages.push(<PreviewSlide box={PreviewBox3} key={uniqid.time()} />);
     pages.push(<SignupSlide box={SignupBox} key={uniqid.time()} />);
 
-    return <div className="App">{pages}</div>;
+    return <Fragment>{pages}</Fragment>;
   }
 }
 
