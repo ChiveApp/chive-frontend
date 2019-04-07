@@ -8,9 +8,10 @@ import Landing from "./slides/Landing";
 import Signin from "./Signin";
 import Register from "./Register";
 import Profile from "./Profile";
+import GroceryList from "./GroceryList";
 
 const client = new ApolloClient({
-  uri: "http://localhost:5000/graphql"
+  uri: "http://localhost:3000/graphql"
 });
 
 class App extends Component {
@@ -23,6 +24,7 @@ class App extends Component {
             <Route path="/signin" component={Signin} />
             <Route path="/register" component={Register} />
             <Route path="/profile" component={Profile} />
+            <Route path="/grocerylist" component={GroceryList} />
           </Switch>
         </BrowserRouter>
       </ApolloProvider>
