@@ -11,6 +11,17 @@ import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 import passwordvalidator from "password-validator";
 
+import gql from "graphql-tag";
+import { Mutation } from "react-apollo";
+
+const CREATE_USER = gql`
+  mutation createUser($email: String!, $password: String!, $name: String!) {
+    createUser(email: $email, password: $password, name: $name) {
+      email
+    }
+  }
+`;
+
 /**
  * The Component is a class that can have a state
  *     (Component provides: constructor(), render(), etc)
@@ -217,9 +228,25 @@ class Register extends Component {
                   {this.state.tooltipText}
                 </UncontrolledTooltip>
               </FormGroup>
-              <Button onClick={this.handleSubmit} style={{ width: "100%" }}>
-                Register!
-              </Button>
+              <Mutation mutation={CREATE_USER}>
+                {(createUser, { data }) => (
+                  <Button
+                    onClick={e => {
+                      e.preventDefault();
+                      createUser({
+                        variables: {
+                          email: this.state.email,
+                          password: this.state.password,
+                          name: this.state.name
+                        }
+                      });
+                    }}
+                    style={{ width: "100%" }}
+                  >
+                    Register!
+                  </Button>
+                )}
+              </Mutation>
             </Form>
             <Link to="/signin">
               <br />
