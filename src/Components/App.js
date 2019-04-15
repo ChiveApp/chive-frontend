@@ -2,13 +2,18 @@ import React, { Component } from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import ApolloClient from "apollo-boost";
 import { ApolloProvider } from "react-apollo";
+
 import "../styles/App.css";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
 
 import Landing from "./slides/Landing";
 import Signin from "./Signin";
 import Register from "./Register";
 import Profile from "./Profile";
 import GroceryList from "./GroceryList";
+
+library.add(fas);
 
 const client = new ApolloClient({
   uri: "http://localhost:3000/graphql"
