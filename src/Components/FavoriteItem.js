@@ -1,11 +1,8 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHourglassHalf } from "@fortawesome/free-solid-svg-icons";
 
 export default class FavoriteItem extends Component {
-  constructor(props) {
-    super(props);
-  }
   // TODO: MAKE FUNCTIONAL FOR STAR CREATION
   render() {
     return (
