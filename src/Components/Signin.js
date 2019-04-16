@@ -1,7 +1,19 @@
 import React, { Component, Fragment } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
+import { Mutation } from "react-apollo";
 import Navbar from "./Navbar";
+import gql from "graphql-tag";
+
+const LOGIN = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      _id
+      email
+      name
+    }
+  }
+`;
 
 class Signin extends Component {
   constructor(props) {
@@ -13,50 +25,20 @@ class Signin extends Component {
     };
 
     // We can attach our own functions by binding them to the class
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.updateEmail = this.updateEmail.bind(this);
-    this.updatePassword = this.updatePassword.bind(this);
+    this.handleTextChange = this.handleTextChange.bind(this);
   }
 
   /**
-   * Update the state.email field everytime the email input changes
+   * Update the state[name] field everytime the associated input changes
    * @param {} event
    */
-  updateEmail(event) {
-    // setState() is misleading, it really updates the given field and
-    //    leaves the other fields alone
-    this.setState({
-      email: event.target.value
-    });
-  }
-
-  /**
-   * Update the state.password field evertime the password input changes
-   * @param {} event
-   */
-  updatePassword(event) {
-    var password = event.target.value;
+  handleTextChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
 
     this.setState({
-      password: password
+      [name]: value
     });
-
-    if (event.charCode === 13) {
-      this.handleSubmit(event);
-    }
-  }
-
-  /**
-   * This function will send the credentials to the GrahpQL API to either:
-   *        authenticate the user
-   *        deny the user
-   * @param {*} event
-   */
-  handleSubmit(event) {
-    event.preventDefault();
-    alert("Authentication coming soon!");
-    // Do checking for valid inputs (email and pass)
-    // Do graphql user stuff
   }
 
   render() {
@@ -87,7 +69,7 @@ class Signin extends Component {
                   name="email"
                   id="email"
                   placeholder="foodie67@chive.com"
-                  onChange={this.updateEmail}
+                  onChange={this.handleTextChange}
                 />
               </FormGroup>
               <FormGroup>
@@ -97,12 +79,38 @@ class Signin extends Component {
                   name="password"
                   id="password"
                   placeholder="secretPassword5!"
-                  onChange={this.updatePassword}
+                  onChange={this.handleTextChange}
                 />
               </FormGroup>
-              <Button onClick={this.handleSubmit} style={{ width: "100%" }}>
-                Sign in!
-              </Button>
+              <Mutation mutation={LOGIN}>
+                {(login, { loading, error, data }) => (
+                  <Fragment>
+                    <Button
+                      onClick={e => {
+                        e.preventDefault();
+                        /**
+                         * TODO:
+                         * - validate password
+                         * - clean name
+                         * - clean email
+                         */
+                        login({
+                          variables: {
+                            email: this.state.email,
+                            password: this.state.password
+                          }
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      disabled={loading || error}
+                    >
+                      {loading ? "spinning icon Signing in..." : "Sign in!"}
+                    </Button>
+                    {data && <Redirect to="/profile" />}
+                    {error && console.log(error)}
+                  </Fragment>
+                )}
+              </Mutation>
             </Form>
             <Link to="/register">
               <br />

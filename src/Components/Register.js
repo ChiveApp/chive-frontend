@@ -7,7 +7,7 @@ import {
   Button,
   UncontrolledTooltip
 } from "reactstrap";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import Navbar from "./Navbar";
 import passwordvalidator from "password-validator";
 
@@ -18,6 +18,7 @@ const CREATE_USER = gql`
   mutation createUser($email: String!, $password: String!, $name: String!) {
     createUser(email: $email, password: $password, name: $name) {
       email
+      name
     }
   }
 `;
@@ -61,50 +62,26 @@ class Register extends Component {
     };
 
     // We can attach our own functions by binding them to the class
-    this.handleSubmit = this.handleSubmit.bind(this);
-    this.updateEmail = this.updateEmail.bind(this);
-    this.updateName = this.updateName.bind(this);
+    this.handleTextChange = this.handleTextChange.bind(this);
     this.updatePassword = this.updatePassword.bind(this);
   }
 
   /**
-   * This function will send the credentials to the GrahpQL API to either:
-   *        create a user
-   *        tell the user that the email is conflicting
-   * @param {*} event
-   */
-  handleSubmit(event) {
-    event.preventDefault();
-    alert("Authentication coming soon!");
-    // Do checking for valid inputs (email and name and pass)
-    // Do graphql user stuff
-  }
-
-  /**
-   * Update the state.email field everytime the email input changes
+   * Update the state[name] field everytime the associated input changes
    * @param {} event
    */
-  updateEmail(event) {
-    // setState() is misleading, it really updates the given field and
-    //    leaves the other fields alone
-    this.setState({
-      email: event.target.value
-    });
-  }
+  handleTextChange(event) {
+    const name = event.target.name;
+    const value = event.target.value;
 
-  /**
-   * Update the state.name field everytime the name input changes
-   * @param {*} event
-   */
-  updateName(event) {
     this.setState({
-      name: event.target.value
+      [name]: value
     });
   }
 
   /**
    * Check to see if the password is a valid password (strong enough)
-   * Update the state.password field evertime the password input changes
+   * Update the state.password field everytime the password input changes
    * @param {} event
    */
   updatePassword(event) {
@@ -152,10 +129,6 @@ class Register extends Component {
     this.setState({
       password: password
     });
-
-    if (event.charCode === 13) {
-      this.handleSubmit(event);
-    }
   }
 
   /**
@@ -191,6 +164,9 @@ class Register extends Component {
                 />
               </div>
               <br />
+              {/**
+                TODO: refactor these formgroups to input boxes? updating parent state from child comp?
+              */}
               <FormGroup>
                 <Label for="email">Email</Label>
                 <Input
@@ -198,7 +174,7 @@ class Register extends Component {
                   name="email"
                   id="email"
                   placeholder="foodie67@chive.com"
-                  onChange={this.updateEmail}
+                  onChange={this.handleTextChange}
                 />
               </FormGroup>
               <FormGroup>
@@ -208,7 +184,7 @@ class Register extends Component {
                   name="name"
                   id="name"
                   placeholder="John Appleseed"
-                  onChange={this.updateName}
+                  onChange={this.handleTextChange}
                 />
               </FormGroup>
               <FormGroup>
@@ -229,22 +205,33 @@ class Register extends Component {
                 </UncontrolledTooltip>
               </FormGroup>
               <Mutation mutation={CREATE_USER}>
-                {(createUser, { data }) => (
-                  <Button
-                    onClick={e => {
-                      e.preventDefault();
-                      createUser({
-                        variables: {
-                          email: this.state.email,
-                          password: this.state.password,
-                          name: this.state.name
-                        }
-                      });
-                    }}
-                    style={{ width: "100%" }}
-                  >
-                    Register!
-                  </Button>
+                {(createUser, { loading, error, data }) => (
+                  <Fragment>
+                    <Button
+                      onClick={e => {
+                        e.preventDefault();
+                        /**
+                         * TODO:
+                         * - validate password
+                         * - clean / approve name
+                         * - clean / approve email
+                         */
+                        createUser({
+                          variables: {
+                            email: this.state.email,
+                            password: this.state.password,
+                            name: this.state.name
+                          }
+                        });
+                      }}
+                      style={{ width: "100%" }}
+                      disabled={loading || error}
+                    >
+                      {loading ? "spinning icon Registering..." : "Register"}
+                    </Button>
+                    {data && <Redirect to="/profile" />}
+                    {error && console.log(error)}
+                  </Fragment>
                 )}
               </Mutation>
             </Form>

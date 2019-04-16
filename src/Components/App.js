@@ -9,6 +9,8 @@ import { HttpLink } from "apollo-link-http";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 
+import { apiURL } from "../configuration/config";
+
 import Landing from "./slides/Landing";
 import Signin from "./Signin";
 import Register from "./Register";
@@ -27,7 +29,7 @@ const client = new ApolloClient({
       if (networkError) console.log(`[Network error]: ${networkError}`);
     }),
     new HttpLink({
-      uri: "http://localhost:3000/graphql",
+      uri: apiURL,
       credentials: "include"
     })
   ]),
