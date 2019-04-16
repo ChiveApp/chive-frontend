@@ -1,7 +1,10 @@
 import React, { Component } from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
+
 import "../styles/App.css";
+import { library } from "@fortawesome/fontawesome-svg-core";
+import { fas } from "@fortawesome/free-solid-svg-icons";
 
 import { ApolloClient } from "apollo-client";
 import { InMemoryCache } from "apollo-cache-inmemory";
@@ -16,6 +19,8 @@ import Signin from "./Signin";
 import Register from "./Register";
 import Profile from "./Profile";
 import GroceryList from "./GroceryList";
+
+library.add(fas);
 
 const client = new ApolloClient({
   link: ApolloLink.from([
