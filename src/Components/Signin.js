@@ -5,6 +5,12 @@ import { Mutation } from "react-apollo";
 import Navbar from "./Navbar";
 import gql from "graphql-tag";
 
+/**
+ * TODO:
+ * - write error supporting for invalid credentials
+ * - write email, password checking for before submitting mutation
+ */
+
 const LOGIN = gql`
   mutation login($email: String!, $password: String!) {
     login(email: $email, password: $password) {
@@ -88,12 +94,6 @@ class Signin extends Component {
                     <Button
                       onClick={e => {
                         e.preventDefault();
-                        /**
-                         * TODO:
-                         * - validate password
-                         * - clean name
-                         * - clean email
-                         */
                         login({
                           variables: {
                             email: this.state.email,

@@ -1,5 +1,13 @@
 import React, { Component, Fragment } from "react";
 
+/**
+ * TODO:
+ * - verify props
+ * - clean up layout
+ * - make a nicer check off overlay
+ * - make sure it's responsive
+ */
+
 export default class GroceryItem extends Component {
   constructor(props) {
     super(props);

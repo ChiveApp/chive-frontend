@@ -10,6 +10,11 @@ import {
 } from "reactstrap";
 import { NavLink as RouterNavLink } from "react-router-dom";
 
+/**
+ * TODO:
+ * - make navbar dynamic on whether the user is signed in or not
+ */
+
 export class Navbar extends Component {
   constructor(props) {
     super(props);

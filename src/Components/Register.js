@@ -14,6 +14,12 @@ import passwordvalidator from "password-validator";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 
+/**
+ * TODO:
+ * - write error supporting for email already taken
+ * - write email, name, password checking for before submitting mutation
+ */
+
 const CREATE_USER = gql`
   mutation createUser($email: String!, $password: String!, $name: String!) {
     createUser(email: $email, password: $password, name: $name) {
@@ -210,12 +216,6 @@ class Register extends Component {
                     <Button
                       onClick={e => {
                         e.preventDefault();
-                        /**
-                         * TODO:
-                         * - validate password
-                         * - clean / approve name
-                         * - clean / approve email
-                         */
                         createUser({
                           variables: {
                             email: this.state.email,

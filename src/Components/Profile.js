@@ -2,6 +2,14 @@ import React, { Component, Fragment } from "react";
 import Navbar from "./Navbar";
 import "../styles/Profile.css";
 import FavoriteItemsList from "./FavoriteItemsList";
+
+/**
+ * TODO:
+ * - clean code
+ * - wrap in Query for users' profile
+ * - make sure it's responsive
+ */
+
 export class Profile extends Component {
   render() {
     return (

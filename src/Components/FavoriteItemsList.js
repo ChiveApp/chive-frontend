@@ -2,6 +2,12 @@ import React, { Component } from "react";
 
 import FavoriteItem from "./FavoriteItem";
 
+/**
+ * TODO:
+ * - refactor to do a query for the users' favorite recipes
+ * - pictures???
+ */
+
 export default class FavoriteItemsList extends Component {
   render() {
     var favorites = [

@@ -2,8 +2,15 @@ import React, { Component } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHourglassHalf } from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * TODO:
+ * - verify props
+ * - clean up layout
+ * - edit buttons
+ * - make sure it's responsive
+ */
+
 export default class FavoriteItem extends Component {
-  // TODO: MAKE FUNCTIONAL FOR STAR CREATION
   render() {
     return (
       <div

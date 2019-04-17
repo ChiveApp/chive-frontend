@@ -3,6 +3,12 @@ import Navbar from "./Navbar";
 
 import GroceryItem from "./GroceryItem";
 
+/**
+ * TODO:
+ * - refactor to do a query of the users' grocerylist items
+ * - pictures???
+ */
+
 export default class GroceryList extends Component {
   render() {
     var groceries = [
