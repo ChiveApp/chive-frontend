@@ -34,7 +34,7 @@ class TitleSlide extends Component {
         >
           <div
             className="d-flex flex-row align-self-end"
-            style={{ marginRight: "19px", marginTop: "19px" }}
+            style={{ marginRight: "19px", marginTop: "19px", zIndex: "1" }}
           >
             <Link to="/register">
               <Button outline color="light" style={{ marginRight: "19px" }}>
