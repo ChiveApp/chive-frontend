@@ -1,13 +1,16 @@
 import React, { Component, Fragment } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
 import { Link, Redirect } from "react-router-dom";
-import { Mutation } from "react-apollo";
 import Navbar from "./Navbar";
+
 import gql from "graphql-tag";
+import { Mutation } from "react-apollo";
+
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
 
 /**
  * TODO:
- * - write error supporting for invalid credentials
  * - write email, password checking for before submitting mutation
  */
 
@@ -48,6 +51,8 @@ class Signin extends Component {
   }
 
   render() {
+    const { email, password } = this.state;
+
     return (
       <Fragment>
         <div
@@ -88,28 +93,33 @@ class Signin extends Component {
                   onChange={this.handleTextChange}
                 />
               </FormGroup>
-              <Mutation mutation={LOGIN}>
-                {(login, { loading, error, data }) => (
-                  <Fragment>
-                    <Button
-                      onClick={e => {
-                        e.preventDefault();
-                        login({
-                          variables: {
-                            email: this.state.email,
-                            password: this.state.password
-                          }
-                        });
-                      }}
-                      style={{ width: "100%" }}
-                      disabled={loading || error}
-                    >
-                      {loading ? "spinning icon Signing in..." : "Sign in!"}
-                    </Button>
-                    {data && <Redirect to="/profile" />}
-                    {error && console.log(error)}
-                  </Fragment>
-                )}
+              <Mutation mutation={LOGIN} variables={{ email, password }}>
+                {(login, { loading, error, data }) => {
+                  /**
+                   * TODO: handle error for invalid credentials
+                   */
+
+                  return (
+                    <Fragment>
+                      <Button
+                        onClick={login}
+                        style={{ width: "100%" }}
+                        disabled={loading || error}
+                      >
+                        {loading ? (
+                          <Fragment>
+                            <FontAwesomeIcon icon={faSpinner} spin /> Signing
+                            in...
+                          </Fragment>
+                        ) : (
+                          "Sign in!"
+                        )}
+                      </Button>
+                      {data && <Redirect to="/profile" />}
+                      {error && console.log(error)}
+                    </Fragment>
+                  );
+                }}
               </Mutation>
             </Form>
             <Link to="/register">

@@ -14,9 +14,11 @@ import passwordvalidator from "password-validator";
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+
 /**
  * TODO:
- * - write error supporting for email already taken
  * - write email, name, password checking for before submitting mutation
  */
 
@@ -146,6 +148,8 @@ class Register extends Component {
    * js should always be wrapped in curly braces in a jsx environment (see below)
    */
   render() {
+    const { name, email, password } = this.state;
+
     return (
       <Fragment>
         <div
@@ -210,29 +214,36 @@ class Register extends Component {
                   {this.state.tooltipText}
                 </UncontrolledTooltip>
               </FormGroup>
-              <Mutation mutation={CREATE_USER}>
-                {(createUser, { loading, error, data }) => (
-                  <Fragment>
-                    <Button
-                      onClick={e => {
-                        e.preventDefault();
-                        createUser({
-                          variables: {
-                            email: this.state.email,
-                            password: this.state.password,
-                            name: this.state.name
-                          }
-                        });
-                      }}
-                      style={{ width: "100%" }}
-                      disabled={loading || error}
-                    >
-                      {loading ? "spinning icon Registering..." : "Register"}
-                    </Button>
-                    {data && <Redirect to="/profile" />}
-                    {error && console.log(error)}
-                  </Fragment>
-                )}
+              <Mutation
+                mutation={CREATE_USER}
+                variables={{ name, email, password }}
+              >
+                {(createUser, { loading, error, data }) => {
+                  /**
+                   * TODO: handle error for email already in user here
+                   */
+
+                  return (
+                    <Fragment>
+                      <Button
+                        onClick={createUser}
+                        style={{ width: "100%" }}
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <Fragment>
+                            <FontAwesomeIcon icon={faSpinner} spin />{" "}
+                            Registering...
+                          </Fragment>
+                        ) : (
+                          "Register!"
+                        )}
+                      </Button>
+                      {data && <Redirect to="/profile" />}
+                      {error && console.log(error)}
+                    </Fragment>
+                  );
+                }}
               </Mutation>
             </Form>
             <Link to="/signin">
