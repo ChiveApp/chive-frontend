@@ -15,7 +15,8 @@ import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faSpinner } from "@fortawesome/free-solid-svg-icons";
+import { faSpinner, faLock } from "@fortawesome/free-solid-svg-icons";
+import { UserConsumer } from "../Contexts/UserContext";
 
 /**
  * TODO:
@@ -72,6 +73,7 @@ class Register extends Component {
     // We can attach our own functions by binding them to the class
     this.handleTextChange = this.handleTextChange.bind(this);
     this.updatePassword = this.updatePassword.bind(this);
+    this.validateForm = this.validateForm.bind(this);
   }
 
   /**
@@ -139,6 +141,10 @@ class Register extends Component {
     });
   }
 
+  validateForm() {
+    throw new Error("Bad password");
+  }
+
   /**
    * This is what is put on the screen.
    * Try to use reactstrap components when you can (Form, Input, Label, etc...)
@@ -152,6 +158,15 @@ class Register extends Component {
 
     return (
       <Fragment>
+        <UserConsumer>
+          {userContext => {
+            /**
+             * TODO: handle error for invalid credentials
+             */
+
+            console.log(userContext);
+          }}
+        </UserConsumer>
         <div
           className="d-flex flex-column"
           style={{
@@ -161,11 +176,7 @@ class Register extends Component {
           <Navbar />
           <div className="d-flex flex-column flex-fill justify-content-center align-items-center">
             {/* You can attach a function to the class and use it as a function for an element */}
-            <Form
-              onSubmit={this.handleSubmit}
-              style={{ minWidth: "20%" }}
-              autoComplete="off"
-            >
+            <Form onSubmit={this.handleSubmit} style={{ minWidth: "20%" }}>
               <div className="d-flex align-items-center justify-content-center">
                 <img
                   src="images/chivelogo.svg"
@@ -223,31 +234,55 @@ class Register extends Component {
                    * TODO: handle error for email already in user here
                    */
 
+                  var buttonText = null;
+                  var errorMessage = null;
+
+                  if (loading) {
+                    buttonText = (
+                      <Fragment>
+                        <FontAwesomeIcon icon={faSpinner} spin /> Registering...
+                      </Fragment>
+                    );
+                  } else {
+                    buttonText = "Register!";
+                  }
+
+                  if (error) {
+                    console.log(error.graphQLErrors);
+
+                    //TODO: parse out error from graphql error properly
+
+                    buttonText = (
+                      <Fragment>
+                        <FontAwesomeIcon icon={faLock} /> Try again
+                      </Fragment>
+                    );
+                    errorMessage = "error";
+                  }
+
+                  if (data) {
+                    console.log(data);
+                  }
+
                   return (
                     <Fragment>
                       <Button
-                        onClick={createUser}
+                        onClick={e => {
+                          e.preventDefault();
+                          createUser();
+                        }}
                         style={{ width: "100%" }}
                         disabled={loading}
                       >
-                        {loading ? (
-                          <Fragment>
-                            <FontAwesomeIcon icon={faSpinner} spin />{" "}
-                            Registering...
-                          </Fragment>
-                        ) : (
-                          "Register!"
-                        )}
+                        {buttonText}
                       </Button>
-                      {data && <Redirect to="/profile" />}
-                      {error && console.log(error)}
+                      {errorMessage}
                     </Fragment>
                   );
                 }}
               </Mutation>
             </Form>
-            <Link to="/signin">
-              <br />
+            <Link to="/signin" style={{ marginTop: ".4rem" }}>
               Already have an account?
             </Link>
           </div>

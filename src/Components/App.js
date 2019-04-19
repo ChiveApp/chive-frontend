@@ -20,6 +20,8 @@ import Register from "./Register";
 import Profile from "./Profile";
 import GroceryList from "./GroceryList";
 
+import { UserProvider } from "../Contexts/UserContext";
+
 library.add(fas);
 
 const client = new ApolloClient({
@@ -45,15 +47,17 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <BrowserRouter>
-          <Switch>
-            <Route exact path="/" component={Landing} />
-            <Route path="/signin" component={Signin} />
-            <Route path="/register" component={Register} />
-            <Route path="/profile" component={Profile} />
-            <Route path="/grocerylist" component={GroceryList} />
-          </Switch>
-        </BrowserRouter>
+        <UserProvider>
+          <BrowserRouter>
+            <Switch>
+              <Route exact path="/" component={Landing} />
+              <Route path="/signin" component={Signin} />
+              <Route path="/register" component={Register} />
+              <Route path="/profile" component={Profile} />
+              <Route path="/grocerylist" component={GroceryList} />
+            </Switch>
+          </BrowserRouter>
+        </UserProvider>
       </ApolloProvider>
     );
   }
