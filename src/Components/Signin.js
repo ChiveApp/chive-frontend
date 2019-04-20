@@ -1,14 +1,24 @@
 import React, { Component, Fragment } from "react";
 import { Form, FormGroup, Label, Input, Button } from "reactstrap";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
-import { graphql } from "react-apollo";
+import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
+// import { withMutationState } from "../hocs/Mutation";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faLock } from "@fortawesome/free-solid-svg-icons";
-import { UserConsumer } from "../Contexts/UserContext";
+
+const LOGIN_MUTATION = gql`
+  mutation login($email: String!, $password: String!) {
+    login(email: $email, password: $password) {
+      _id
+      email
+      name
+    }
+  }
+`;
 
 /**
  * TODO:
@@ -19,17 +29,19 @@ class Signin extends Component {
   constructor(props) {
     super(props);
 
+    console.log(props);
+
     this.state = {
       email: "",
       password: "",
       buttonDisabled: false,
-      buttonText: "Sign in!",
-      errorComponent: undefined,
-      userContext: undefined
+      buttonText: this.props.loginLoading ? "Signing in..." : "Sign in!",
+      errorComponent: undefined
     };
 
     // We can attach our own functions by binding them to the class
     this.handleTextChange = this.handleTextChange.bind(this);
+    this.validateForm = this.validateForm.bind(this);
   }
 
   /**
@@ -45,24 +57,20 @@ class Signin extends Component {
     });
   }
 
-  submitCredentials = async event => {
+  validateForm(event, login) {
     event.preventDefault();
 
-    const { data } = await this.props.mutate({
+    /**
+     * TODO: validate form
+     */
+
+    login({
       variables: {
         email: this.state.email,
         password: this.state.password
       }
     });
-
-    if (data) {
-      console.log(data);
-      this.state.userContext.updateUser({
-        email: data.login.email,
-        name: data.login.name
-      });
-    }
-  };
+  }
 
   render() {
     return (
@@ -104,65 +112,50 @@ class Signin extends Component {
                 onChange={this.handleTextChange}
               />
             </FormGroup>
-            <UserConsumer>
-              {userContext => {
-                /**
-                 * TODO: handle error for invalid credentials
-                 */
+            <Mutation
+              mutation={LOGIN_MUTATION}
+              onCompleted={({ login }) => {
+                this.props.userContext.updateUser({
+                  email: login.email,
+                  name: login.name
+                });
+                this.props.history.push("/profile");
+              }}
+            >
+              {(login, { loading, error }) => {
+                let buttonText = undefined;
 
-                console.log(userContext);
+                if (loading) {
+                  buttonText = (
+                    <Fragment>
+                      <FontAwesomeIcon icon={faSpinner} spin /> Signing in...
+                    </Fragment>
+                  );
+                } else {
+                  buttonText = "Sign in!";
+                }
 
-                this.state.userContext = userContext;
-
-                // if (loading) {
-                //   buttonText = (
-                //     <Fragment>
-                //       <FontAwesomeIcon icon={faSpinner} spin /> Signing in...
-                //     </Fragment>
-                //   );
-                // } else {
-                //   buttonText = "Sign in!";
-                // }
-
-                // if (error) {
-                //   buttonText = (
-                //     <Fragment>
-                //       <FontAwesomeIcon icon={faLock} /> Try again
-                //     </Fragment>
-                //   );
-                //   errorMessage = (
-                //     <div
-                //       className="d-flex flex-column flex-fill justify-content-center align-items-center"
-                //       style={{ marginTop: ".6rem" }}
-                //     >
-                //       {error.graphQLErrors[0].message}
-                //     </div>
-                //   );
-                // }
-
-                // if (data) {
-                //   console.log(data);
-                //   let { login } = data;
-                //   userContext.updateUser({
-                //     email: login.email,
-                //     name: login.name
-                //   });
-                // }
+                if (error) {
+                  buttonText = (
+                    <Fragment>
+                      <FontAwesomeIcon icon={faLock} /> Try again
+                    </Fragment>
+                  );
+                }
 
                 return (
                   <Fragment>
                     <Button
-                      onClick={this.submitCredentials}
+                      onClick={event => this.validateForm(event, login)}
                       style={{ width: "100%" }}
-                      disabled={this.state.buttonDisabled}
+                      disabled={loading}
                     >
-                      {this.state.buttonText}
+                      {buttonText}
                     </Button>
-                    {this.state.errorComponent}
                   </Fragment>
                 );
               }}
-            </UserConsumer>
+            </Mutation>
           </Form>
           <Link to="/register" style={{ marginTop: ".4rem" }}>
             Need an account?
@@ -173,12 +166,4 @@ class Signin extends Component {
   }
 }
 
-export default graphql(gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      _id
-      email
-      name
-    }
-  }
-`)(Signin);
+export default Signin;

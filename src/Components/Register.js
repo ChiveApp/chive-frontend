@@ -5,18 +5,19 @@ import {
   Label,
   Input,
   Button,
-  UncontrolledTooltip
+  FormFeedback
 } from "reactstrap";
-import { Link, Redirect } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
-import passwordvalidator from "password-validator";
+
+import passwordValidator from "password-validator";
+import emailValidator from "email-validator";
 
 import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faLock } from "@fortawesome/free-solid-svg-icons";
-import { UserConsumer } from "../Contexts/UserContext";
 
 /**
  * TODO:
@@ -43,7 +44,7 @@ class Register extends Component {
   constructor(props) {
     super(props);
 
-    this.passwordSchema = new passwordvalidator();
+    this.passwordSchema = new passwordValidator();
 
     this.passwordSchema
       .is()
@@ -64,10 +65,11 @@ class Register extends Component {
 
     this.state = {
       email: "",
+      validEmail: "default",
       password: "",
+      validPassword: "default",
       name: "",
-      tooltipIsOpen: false,
-      tooltipText: ""
+      validName: "default"
     };
 
     // We can attach our own functions by binding them to the class
@@ -87,6 +89,22 @@ class Register extends Component {
     this.setState({
       [name]: value
     });
+
+    if (name + "Validator" === "emailValidator") {
+      this.setState({
+        validEmail: {
+          valid: value.length === 0 || emailValidator.validate(value),
+          errorMessage: "Invalid email"
+        }
+      });
+    } else if (name + "Validator" === "nameValidator") {
+      this.setState({
+        validName: {
+          valid: value.length !== 0,
+          errorMessage: "Invalid name"
+        }
+      });
+    }
   }
 
   /**
@@ -99,7 +117,7 @@ class Register extends Component {
 
     var failed = this.passwordSchema.validate(password, { list: true });
 
-    if (failed.length > 0 && password.length !== 0) {
+    if (password.length !== 0 && failed.length !== 0) {
       var error = failed.slice(-1)[0];
       var errorMessage = "";
       switch (error) {
@@ -123,26 +141,63 @@ class Register extends Component {
           errorMessage = "Passwords must be 8 to 100 characters";
           break;
         default:
-          console.log(failed);
+          break;
       }
 
       this.setState({
-        tooltipIsOpen: true,
-        tooltipText: errorMessage
+        password: password,
+        validPassword: {
+          valid: false,
+          errorMessage: errorMessage
+        }
       });
     } else {
       this.setState({
-        tooltipIsOpen: false
+        password: password,
+        validPassword: {
+          valid: true
+        }
+      });
+    }
+  }
+
+  validateForm(event, createUser) {
+    event.preventDefault();
+
+    if (!this.state.validEmail.valid) {
+      this.setState({
+        validEmail: {
+          valid: false,
+          errorMessage: "Valid email required"
+        }
       });
     }
 
-    this.setState({
-      password: password
-    });
-  }
+    if (!this.state.validName.valid) {
+      this.setState({
+        validName: {
+          valid: false,
+          errorMessage: "Valid name required"
+        }
+      });
+    }
 
-  validateForm() {
-    throw new Error("Bad password");
+    if (!this.state.validPassword.valid) {
+      this.setState({
+        validPassword: {
+          valid: false,
+          errorMessage: "Valid password required"
+        }
+      });
+    }
+
+    createUser({
+      variables: {
+        email: this.state.email,
+        name: this.state.name,
+        password: this.state.password
+      }
+    });
   }
 
   /**
@@ -154,140 +209,129 @@ class Register extends Component {
    * js should always be wrapped in curly braces in a jsx environment (see below)
    */
   render() {
-    const { name, email, password } = this.state;
-
     return (
-      <Fragment>
-        <UserConsumer>
-          {userContext => {
-            /**
-             * TODO: handle error for invalid credentials
-             */
+      <div
+        className="d-flex flex-column"
+        style={{
+          height: "100vh"
+        }}
+      >
+        <Navbar />
+        <div className="d-flex flex-column flex-fill justify-content-center align-items-center">
+          {/* You can attach a function to the class and use it as a function for an element */}
+          <Form onSubmit={this.handleSubmit} style={{ minWidth: "20%" }}>
+            <div className="d-flex align-items-center justify-content-center">
+              <img
+                src="images/chivelogo.svg"
+                alt="chive logo"
+                style={{ width: "50%" }}
+              />
+            </div>
+            <br />
+            <FormGroup>
+              <Label for="email">Email</Label>
+              <Input
+                type="email"
+                name="email"
+                id="email"
+                placeholder="foodie67@chive.com"
+                invalid={
+                  !this.state.validEmail.valid &&
+                  this.state.validEmail !== "default"
+                }
+                onChange={this.handleTextChange}
+              />
+              <FormFeedback valid={this.state.validEmail.valid}>
+                {this.state.validEmail.errorMessage}
+              </FormFeedback>
+            </FormGroup>
+            <FormGroup>
+              <Label for="name">Name</Label>
+              <Input
+                type="name"
+                name="name"
+                id="name"
+                placeholder="John Appleseed"
+                invalid={
+                  !this.state.validName.valid &&
+                  this.state.validName !== "default"
+                }
+                onChange={this.handleTextChange}
+              />
+              <FormFeedback valid={this.state.validName.valid}>
+                {this.state.validName.errorMessage}
+              </FormFeedback>
+            </FormGroup>
+            <FormGroup>
+              <Label for="password">Password</Label>
+              <Input
+                type="password"
+                name="password"
+                id="password"
+                placeholder="secretPassword5!"
+                invalid={
+                  !this.state.validPassword.valid &&
+                  this.state.validPassword !== "default"
+                }
+                onChange={this.updatePassword}
+              />
+              <FormFeedback valid={this.state.validPassword.valid}>
+                {this.state.validPassword.errorMessage}
+              </FormFeedback>
+            </FormGroup>
+            <Mutation
+              mutation={CREATE_USER}
+              onCompleted={({ createUser }) => {
+                this.props.userContext.updateUser({
+                  email: createUser.email,
+                  name: createUser.name
+                });
+                this.props.history.push("/profile");
+              }}
+            >
+              {(createUser, { loading, error }) => {
+                let buttonText = undefined;
 
-            console.log(userContext);
-          }}
-        </UserConsumer>
-        <div
-          className="d-flex flex-column"
-          style={{
-            height: "100vh"
-          }}
-        >
-          <Navbar />
-          <div className="d-flex flex-column flex-fill justify-content-center align-items-center">
-            {/* You can attach a function to the class and use it as a function for an element */}
-            <Form onSubmit={this.handleSubmit} style={{ minWidth: "20%" }}>
-              <div className="d-flex align-items-center justify-content-center">
-                <img
-                  src="images/chivelogo.svg"
-                  alt="chive logo"
-                  style={{ width: "50%" }}
-                />
-              </div>
-              <br />
-              {/**
-                TODO: refactor these formgroups to input boxes? updating parent state from child comp?
-              */}
-              <FormGroup>
-                <Label for="email">Email</Label>
-                <Input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="foodie67@chive.com"
-                  onChange={this.handleTextChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="name">Name</Label>
-                <Input
-                  type="name"
-                  name="name"
-                  id="name"
-                  placeholder="John Appleseed"
-                  onChange={this.handleTextChange}
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="password">Password</Label>
-                <Input
-                  type="password"
-                  name="password"
-                  id="password"
-                  placeholder="secretPassword5!"
-                  onChange={this.updatePassword}
-                />
-                <UncontrolledTooltip
-                  placement="auto-end"
-                  isOpen={this.state.tooltipIsOpen}
-                  target="password"
-                >
-                  {this.state.tooltipText}
-                </UncontrolledTooltip>
-              </FormGroup>
-              <Mutation
-                mutation={CREATE_USER}
-                variables={{ name, email, password }}
-              >
-                {(createUser, { loading, error, data }) => {
-                  /**
-                   * TODO: handle error for email already in user here
-                   */
-
-                  var buttonText = null;
-                  var errorMessage = null;
-
-                  if (loading) {
-                    buttonText = (
-                      <Fragment>
-                        <FontAwesomeIcon icon={faSpinner} spin /> Registering...
-                      </Fragment>
-                    );
-                  } else {
-                    buttonText = "Register!";
-                  }
-
-                  if (error) {
-                    console.log(error.graphQLErrors);
-
-                    //TODO: parse out error from graphql error properly
-
-                    buttonText = (
-                      <Fragment>
-                        <FontAwesomeIcon icon={faLock} /> Try again
-                      </Fragment>
-                    );
-                    errorMessage = "error";
-                  }
-
-                  if (data) {
-                    console.log(data);
-                  }
-
-                  return (
+                if (loading) {
+                  buttonText = (
                     <Fragment>
-                      <Button
-                        onClick={e => {
-                          e.preventDefault();
-                          createUser();
-                        }}
-                        style={{ width: "100%" }}
-                        disabled={loading}
-                      >
-                        {buttonText}
-                      </Button>
-                      {errorMessage}
+                      <FontAwesomeIcon icon={faSpinner} spin /> Registering...
                     </Fragment>
                   );
-                }}
-              </Mutation>
-            </Form>
-            <Link to="/signin" style={{ marginTop: ".4rem" }}>
-              Already have an account?
-            </Link>
-          </div>
+                } else {
+                  buttonText = "Sign in!";
+                }
+
+                if (error) {
+                  /**
+                   * TODO: Better response handling
+                   */
+                  buttonText = (
+                    <Fragment>
+                      <FontAwesomeIcon icon={faLock} /> Try again
+                    </Fragment>
+                  );
+                }
+
+                return (
+                  <Fragment>
+                    <Button
+                      onClick={event => this.validateForm(event, createUser)}
+                      style={{ width: "100%" }}
+                      disabled={loading}
+                    >
+                      {buttonText}
+                    </Button>
+                  </Fragment>
+                );
+              }}
+            </Mutation>
+          </Form>
+          <Link to="/signin" style={{ marginTop: ".4rem" }}>
+            Already have an account?
+          </Link>
         </div>
-      </Fragment>
+      </div>
     );
   }
 }
