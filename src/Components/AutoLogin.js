@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { compose, graphql } from "react-apollo";
 import gql from "graphql-tag";
+import E503 from "./InfoPages/E503";
 
 const LOGGED_IN_QUERY = gql`
   query {
@@ -15,11 +16,11 @@ const LOGGED_IN_QUERY = gql`
 `;
 
 const LoadingScreen = () => {
-  return <p>Loading...</p>;
+  return <p />;
 };
 
 const ErrorScreen = () => {
-  return <p>Oopsie woopsie...</p>;
+  return <E503 />;
 };
 
 class AutoLoginComponent extends Component {

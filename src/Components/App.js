@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
 
@@ -22,6 +22,7 @@ import GroceryList from "./GroceryList";
 
 import { UserProvider, UserConsumer } from "../Contexts/UserContext";
 import { AutoLogin } from "./AutoLogin";
+import E404 from "./InfoPages/E404";
 
 library.add(fas);
 
@@ -79,7 +80,7 @@ class App extends Component {
                     };
 
                     return (
-                      <Fragment>
+                      <Switch>
                         <RouteWithUser path="/signin" component={Signin} />
                         <RouteWithUser path="/register" component={Register} />
                         <RouteWithUser path="/profile" component={Profile} />
@@ -87,7 +88,8 @@ class App extends Component {
                           path="/grocerylist"
                           component={GroceryList}
                         />
-                      </Fragment>
+                        <Route component={E404} />
+                      </Switch>
                     );
                   }}
                 </UserConsumer>

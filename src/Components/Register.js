@@ -8,7 +8,6 @@ import {
   FormFeedback
 } from "reactstrap";
 import { Link } from "react-router-dom";
-import Navbar from "./Navbar";
 
 import passwordValidator from "password-validator";
 import emailValidator from "email-validator";
@@ -18,11 +17,7 @@ import { Mutation } from "react-apollo";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faLock } from "@fortawesome/free-solid-svg-icons";
-
-/**
- * TODO:
- * - write email, name, password checking for before submitting mutation
- */
+import CenterPageNav from "./Layout/CenterPageNav";
 
 const CREATE_USER = gql`
   mutation createUser($email: String!, $password: String!, $name: String!) {
@@ -43,6 +38,10 @@ const CREATE_USER = gql`
 class Register extends Component {
   constructor(props) {
     super(props);
+
+    if (props.userContext.email !== "" && props.userContext.name !== "") {
+      this.props.history.push("/profile");
+    }
 
     this.passwordSchema = new passwordValidator();
 
@@ -210,129 +209,120 @@ class Register extends Component {
    */
   render() {
     return (
-      <div
-        className="d-flex flex-column"
-        style={{
-          height: "100vh"
-        }}
-      >
-        <Navbar />
-        <div className="d-flex flex-column flex-fill justify-content-center align-items-center">
-          {/* You can attach a function to the class and use it as a function for an element */}
-          <Form onSubmit={this.handleSubmit} style={{ minWidth: "20%" }}>
-            <div className="d-flex align-items-center justify-content-center">
-              <img
-                src="images/chivelogo.svg"
-                alt="chive logo"
-                style={{ width: "50%" }}
-              />
-            </div>
-            <br />
-            <FormGroup>
-              <Label for="email">Email</Label>
-              <Input
-                type="email"
-                name="email"
-                id="email"
-                placeholder="foodie67@chive.com"
-                invalid={
-                  !this.state.validEmail.valid &&
-                  this.state.validEmail !== "default"
-                }
-                onChange={this.handleTextChange}
-              />
-              <FormFeedback valid={this.state.validEmail.valid}>
-                {this.state.validEmail.errorMessage}
-              </FormFeedback>
-            </FormGroup>
-            <FormGroup>
-              <Label for="name">Name</Label>
-              <Input
-                type="name"
-                name="name"
-                id="name"
-                placeholder="John Appleseed"
-                invalid={
-                  !this.state.validName.valid &&
-                  this.state.validName !== "default"
-                }
-                onChange={this.handleTextChange}
-              />
-              <FormFeedback valid={this.state.validName.valid}>
-                {this.state.validName.errorMessage}
-              </FormFeedback>
-            </FormGroup>
-            <FormGroup>
-              <Label for="password">Password</Label>
-              <Input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="secretPassword5!"
-                invalid={
-                  !this.state.validPassword.valid &&
-                  this.state.validPassword !== "default"
-                }
-                onChange={this.updatePassword}
-              />
-              <FormFeedback valid={this.state.validPassword.valid}>
-                {this.state.validPassword.errorMessage}
-              </FormFeedback>
-            </FormGroup>
-            <Mutation
-              mutation={CREATE_USER}
-              onCompleted={({ createUser }) => {
-                this.props.userContext.updateUser({
-                  email: createUser.email,
-                  name: createUser.name
-                });
-                this.props.history.push("/profile");
-              }}
-            >
-              {(createUser, { loading, error }) => {
-                let buttonText = undefined;
+      <CenterPageNav {...this.props}>
+        <Form onSubmit={this.handleSubmit} style={{ minWidth: "20%" }}>
+          <div className="d-flex align-items-center justify-content-center">
+            <img
+              src="images/chivelogo.svg"
+              alt="chive logo"
+              style={{ width: "50%" }}
+            />
+          </div>
+          <br />
+          <FormGroup>
+            <Label for="email">Email</Label>
+            <Input
+              type="email"
+              name="email"
+              id="email"
+              placeholder="foodie67@chive.com"
+              invalid={
+                !this.state.validEmail.valid &&
+                this.state.validEmail !== "default"
+              }
+              onChange={this.handleTextChange}
+            />
+            <FormFeedback valid={this.state.validEmail.valid}>
+              {this.state.validEmail.errorMessage}
+            </FormFeedback>
+          </FormGroup>
+          <FormGroup>
+            <Label for="name">Name</Label>
+            <Input
+              type="name"
+              name="name"
+              id="name"
+              placeholder="John Appleseed"
+              invalid={
+                !this.state.validName.valid &&
+                this.state.validName !== "default"
+              }
+              onChange={this.handleTextChange}
+            />
+            <FormFeedback valid={this.state.validName.valid}>
+              {this.state.validName.errorMessage}
+            </FormFeedback>
+          </FormGroup>
+          <FormGroup>
+            <Label for="password">Password</Label>
+            <Input
+              type="password"
+              name="password"
+              id="password"
+              placeholder="secretPassword5!"
+              invalid={
+                !this.state.validPassword.valid &&
+                this.state.validPassword !== "default"
+              }
+              onChange={this.updatePassword}
+            />
+            <FormFeedback valid={this.state.validPassword.valid}>
+              {this.state.validPassword.errorMessage}
+            </FormFeedback>
+          </FormGroup>
+          <Mutation
+            mutation={CREATE_USER}
+            onCompleted={({ createUser }) => {
+              this.props.userContext.updateUser({
+                email: createUser.email,
+                name: createUser.name
+              });
+              this.props.history.push("/profile");
+            }}
+          >
+            {(createUser, { loading, error }) => {
+              let buttonText = undefined;
 
-                if (loading) {
-                  buttonText = (
-                    <Fragment>
-                      <FontAwesomeIcon icon={faSpinner} spin /> Registering...
-                    </Fragment>
-                  );
-                } else {
-                  buttonText = "Sign in!";
-                }
-
-                if (error) {
-                  /**
-                   * TODO: handle graphql errors
-                   */
-
-                  buttonText = (
-                    <Fragment>
-                      <FontAwesomeIcon icon={faLock} /> Try again
-                    </Fragment>
-                  );
-                }
-
-                return (
+              if (loading) {
+                buttonText = (
                   <Fragment>
-                    <Button
-                      onClick={event => this.validateForm(event, createUser)}
-                      style={{ width: "100%" }}
-                      disabled={loading}
-                    >
-                      {buttonText}
-                    </Button>
+                    <FontAwesomeIcon icon={faSpinner} spin /> Registering...
                   </Fragment>
                 );
-              }}
-            </Mutation>
-          </Form>
-          <Link to="/signin" style={{ marginTop: ".4rem" }}>
-            Already have an account?
-          </Link>
-        </div>
-      </div>
+              } else {
+                buttonText = "Sign in!";
+              }
+
+              if (error) {
+                /**
+                 * TODO: handle graphql errors
+                 */
+
+                buttonText = (
+                  <Fragment>
+                    <FontAwesomeIcon icon={faLock} /> Try again
+                  </Fragment>
+                );
+              }
+
+              return (
+                <Fragment>
+                  <Button
+                    onClick={event => this.validateForm(event, createUser)}
+                    style={{ width: "100%" }}
+                    disabled={loading}
+                  >
+                    {buttonText}
+                  </Button>
+                </Fragment>
+              );
+            }}
+          </Mutation>
+        </Form>
+        <Link to="/signin" style={{ marginTop: ".4rem" }}>
+          Already have an account?
+        </Link>
+      </CenterPageNav>
     );
   }
 }
