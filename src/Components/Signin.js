@@ -1,11 +1,19 @@
 import React, { Component, Fragment } from "react";
-import { Form, FormGroup, Label, Input, Button } from "reactstrap";
+import {
+  Form,
+  FormGroup,
+  FormFeedback,
+  Label,
+  Input,
+  Button
+} from "reactstrap";
 import { Link } from "react-router-dom";
 import Navbar from "./Navbar";
 
+import emailValidator from "email-validator";
+
 import { Mutation } from "react-apollo";
 import gql from "graphql-tag";
-// import { withMutationState } from "../hocs/Mutation";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faLock } from "@fortawesome/free-solid-svg-icons";
@@ -20,20 +28,19 @@ const LOGIN_MUTATION = gql`
   }
 `;
 
-/**
- * TODO:
- * - write email, password checking for before submitting mutation
- */
-
 class Signin extends Component {
   constructor(props) {
     super(props);
 
-    console.log(props);
+    if (props.userContext.email !== "" && props.userContext.name !== "") {
+      this.props.history.push("/profile");
+    }
 
     this.state = {
       email: "",
+      validEmail: "default",
       password: "",
+      validPassword: "default",
       buttonDisabled: false,
       buttonText: this.props.loginLoading ? "Signing in..." : "Sign in!",
       errorComponent: undefined
@@ -55,21 +62,58 @@ class Signin extends Component {
     this.setState({
       [name]: value
     });
+
+    if (name + "Validator" === "emailValidator") {
+      this.setState({
+        validEmail: {
+          valid: value.length === 0 || emailValidator.validate(value),
+          errorMessage: "Invalid email"
+        }
+      });
+    }
+
+    if (name === "password") {
+      this.setState({
+        validPassword: {
+          valid: true
+        }
+      });
+    }
   }
 
   validateForm(event, login) {
     event.preventDefault();
 
-    /**
-     * TODO: validate form
-     */
+    let isValid = true;
 
-    login({
-      variables: {
-        email: this.state.email,
-        password: this.state.password
-      }
-    });
+    if (!this.state.validEmail.valid) {
+      this.setState({
+        validEmail: {
+          valid: false,
+          errorMessage: "Valid email required"
+        }
+      });
+      isValid = false;
+    }
+
+    if (!this.state.validPassword.valid) {
+      this.setState({
+        validPassword: {
+          valid: false,
+          errorMessage: "Valid password required"
+        }
+      });
+      isValid = false;
+    }
+
+    if (isValid) {
+      login({
+        variables: {
+          email: this.state.email,
+          password: this.state.password
+        }
+      });
+    }
   }
 
   render() {
@@ -99,8 +143,15 @@ class Signin extends Component {
                 name="email"
                 id="email"
                 placeholder="foodie67@chive.com"
+                invalid={
+                  !this.state.validEmail.valid &&
+                  this.state.validEmail !== "default"
+                }
                 onChange={this.handleTextChange}
               />
+              <FormFeedback valid={this.state.validEmail.valid}>
+                {this.state.validEmail.errorMessage}
+              </FormFeedback>{" "}
             </FormGroup>
             <FormGroup>
               <Label for="password">Password</Label>
@@ -109,8 +160,15 @@ class Signin extends Component {
                 name="password"
                 id="password"
                 placeholder="secretPassword5!"
+                invalid={
+                  !this.state.validPassword.valid &&
+                  this.state.validPassword !== "default"
+                }
                 onChange={this.handleTextChange}
               />
+              <FormFeedback valid={this.state.validPassword.valid}>
+                {this.state.validPassword.errorMessage}
+              </FormFeedback>
             </FormGroup>
             <Mutation
               mutation={LOGIN_MUTATION}
@@ -136,6 +194,10 @@ class Signin extends Component {
                 }
 
                 if (error) {
+                  /**
+                   * TODO: handle graphql errors
+                   */
+
                   buttonText = (
                     <Fragment>
                       <FontAwesomeIcon icon={faLock} /> Try again

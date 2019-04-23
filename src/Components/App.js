@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import { Switch, Route, BrowserRouter } from "react-router-dom";
 import { ApolloProvider } from "react-apollo";
 
@@ -21,6 +21,7 @@ import Profile from "./Profile";
 import GroceryList from "./GroceryList";
 
 import { UserProvider, UserConsumer } from "../Contexts/UserContext";
+import { AutoLogin } from "./AutoLogin";
 
 library.add(fas);
 
@@ -47,45 +48,53 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <UserProvider>
-          <UserConsumer>
-            {userContext => {
-              /**
-               * provides the userContext to Components rendered with RouteWithUser by props
-               */
-              const RouteWithUser = ({
-                component: RouteComponent,
-                ...rest
-              }) => {
-                return (
-                  <Route
-                    {...rest}
-                    render={props => {
-                      return (
-                        <RouteComponent {...props} userContext={userContext} />
-                      );
-                    }}
-                  />
-                );
-              };
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={Landing} />
+            <AutoLogin>
+              <UserProvider>
+                <UserConsumer>
+                  {userContext => {
+                    /**
+                     * provides the userContext to Components rendered with RouteWithUser by props
+                     */
 
-              return (
-                <BrowserRouter>
-                  <Switch>
-                    <Route exact path="/" component={Landing} />
-                    <RouteWithUser path="/signin" component={Signin} />
-                    <RouteWithUser path="/register" component={Register} />
-                    <RouteWithUser path="/profile" component={Profile} />
-                    <RouteWithUser
-                      path="/grocerylist"
-                      component={GroceryList}
-                    />
-                  </Switch>
-                </BrowserRouter>
-              );
-            }}
-          </UserConsumer>
-        </UserProvider>
+                    const RouteWithUser = ({
+                      component: RouteComponent,
+                      ...rest
+                    }) => {
+                      return (
+                        <Route
+                          {...rest}
+                          render={props => {
+                            return (
+                              <RouteComponent
+                                {...props}
+                                userContext={userContext}
+                              />
+                            );
+                          }}
+                        />
+                      );
+                    };
+
+                    return (
+                      <Fragment>
+                        <RouteWithUser path="/signin" component={Signin} />
+                        <RouteWithUser path="/register" component={Register} />
+                        <RouteWithUser path="/profile" component={Profile} />
+                        <RouteWithUser
+                          path="/grocerylist"
+                          component={GroceryList}
+                        />
+                      </Fragment>
+                    );
+                  }}
+                </UserConsumer>
+              </UserProvider>
+            </AutoLogin>
+          </Switch>
+        </BrowserRouter>
       </ApolloProvider>
     );
   }

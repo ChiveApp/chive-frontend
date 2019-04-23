@@ -24,8 +24,6 @@ export default class GroceryItem extends Component {
   }
 
   handleButton() {
-    console.log("clicked!");
-
     this.setState({
       checked: !this.state.checked
     });

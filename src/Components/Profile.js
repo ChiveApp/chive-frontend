@@ -11,6 +11,14 @@ import FavoriteItemsList from "./FavoriteItemsList";
  */
 
 export class Profile extends Component {
+  constructor(props) {
+    super(props);
+
+    if (props.userContext.email === "" && props.userContext.name === "") {
+      this.props.history.push("/signin");
+    }
+  }
+
   render() {
     return (
       <Fragment>

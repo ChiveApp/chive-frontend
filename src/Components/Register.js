@@ -97,13 +97,6 @@ class Register extends Component {
           errorMessage: "Invalid email"
         }
       });
-    } else if (name + "Validator" === "nameValidator") {
-      this.setState({
-        validName: {
-          valid: value.length !== 0,
-          errorMessage: "Invalid name"
-        }
-      });
     }
   }
 
@@ -164,6 +157,8 @@ class Register extends Component {
   validateForm(event, createUser) {
     event.preventDefault();
 
+    let isValid = true;
+
     if (!this.state.validEmail.valid) {
       this.setState({
         validEmail: {
@@ -171,15 +166,17 @@ class Register extends Component {
           errorMessage: "Valid email required"
         }
       });
+      isValid = false;
     }
 
-    if (!this.state.validName.valid) {
+    if (this.state.email.length === 0) {
       this.setState({
         validName: {
           valid: false,
           errorMessage: "Valid name required"
         }
       });
+      isValid = false;
     }
 
     if (!this.state.validPassword.valid) {
@@ -189,15 +186,18 @@ class Register extends Component {
           errorMessage: "Valid password required"
         }
       });
+      isValid = false;
     }
 
-    createUser({
-      variables: {
-        email: this.state.email,
-        name: this.state.name,
-        password: this.state.password
-      }
-    });
+    if (isValid) {
+      createUser({
+        variables: {
+          email: this.state.email,
+          name: this.state.name,
+          password: this.state.password
+        }
+      });
+    }
   }
 
   /**
@@ -304,8 +304,9 @@ class Register extends Component {
 
                 if (error) {
                   /**
-                   * TODO: Better response handling
+                   * TODO: handle graphql errors
                    */
+
                   buttonText = (
                     <Fragment>
                       <FontAwesomeIcon icon={faLock} /> Try again
