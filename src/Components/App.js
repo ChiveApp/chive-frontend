@@ -89,6 +89,7 @@ class App extends Component {
                           path="/grocerylist"
                           component={GroceryList}
                         />
+                        <RouteWithUser path="/recipe" component={Recipe} />
                         <Route component={E404} />
                       </Switch>
                     );

@@ -1,8 +1,6 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import Navbar from "./Navbar";
 import "../styles/Profile.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHourglassHalf } from "@fortawesome/free-solid-svg-icons";
 
 export class Recipe extends Component {
   render() {
