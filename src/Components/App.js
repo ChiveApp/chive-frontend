@@ -22,6 +22,8 @@ import GroceryList from "./GroceryList";
 import Recipe from "./Recipe";
 
 import { UserProvider, UserConsumer } from "../Contexts/UserContext";
+import { AutoLogin } from "./AutoLogin";
+import E404 from "./InfoPages/E404";
 
 library.add(fas);
 
@@ -48,46 +50,54 @@ class App extends Component {
   render() {
     return (
       <ApolloProvider client={client}>
-        <UserProvider>
-          <UserConsumer>
-            {userContext => {
-              /**
-               * provides the userContext to Components rendered with RouteWithUser by props
-               */
-              const RouteWithUser = ({
-                component: RouteComponent,
-                ...rest
-              }) => {
-                return (
-                  <Route
-                    {...rest}
-                    render={props => {
-                      return (
-                        <RouteComponent {...props} userContext={userContext} />
-                      );
-                    }}
-                  />
-                );
-              };
+        <BrowserRouter>
+          <Switch>
+            <Route exact path="/" component={Landing} />
+            <AutoLogin>
+              <UserProvider>
+                <UserConsumer>
+                  {userContext => {
+                    /**
+                     * provides the userContext to Components rendered with RouteWithUser by props
+                     */
 
-              return (
-                <BrowserRouter>
-                  <Switch>
-                    <Route exact path="/" component={Landing} />
-                    <RouteWithUser path="/signin" component={Signin} />
-                    <RouteWithUser path="/register" component={Register} />
-                    <RouteWithUser path="/profile" component={Profile} />
-                    <RouteWithUser path="/recipe" component={Recipe} />
-                    <RouteWithUser
-                      path="/grocerylist"
-                      component={GroceryList}
-                    />
-                  </Switch>
-                </BrowserRouter>
-              );
-            }}
-          </UserConsumer>
-        </UserProvider>
+                    const RouteWithUser = ({
+                      component: RouteComponent,
+                      ...rest
+                    }) => {
+                      return (
+                        <Route
+                          {...rest}
+                          render={props => {
+                            return (
+                              <RouteComponent
+                                {...props}
+                                userContext={userContext}
+                              />
+                            );
+                          }}
+                        />
+                      );
+                    };
+
+                    return (
+                      <Switch>
+                        <RouteWithUser path="/signin" component={Signin} />
+                        <RouteWithUser path="/register" component={Register} />
+                        <RouteWithUser path="/profile" component={Profile} />
+                        <RouteWithUser
+                          path="/grocerylist"
+                          component={GroceryList}
+                        />
+                        <Route component={E404} />
+                      </Switch>
+                    );
+                  }}
+                </UserConsumer>
+              </UserProvider>
+            </AutoLogin>
+          </Switch>
+        </BrowserRouter>
       </ApolloProvider>
     );
   }

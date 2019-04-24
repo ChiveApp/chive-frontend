@@ -6,10 +6,14 @@ export class UserProvider extends Component {
   constructor(props) {
     super(props);
 
-    this.state = {
-      email: "",
-      name: ""
-    };
+    if (props.user && props.user.__typename === "User") {
+      this.state = props.user;
+    } else {
+      this.state = {
+        email: "",
+        name: ""
+      };
+    }
 
     this.updateUser = this.updateUser.bind(this);
   }
@@ -23,6 +27,7 @@ export class UserProvider extends Component {
 
   render() {
     const { children } = this.props;
+
     return (
       <UserContext.Provider
         value={{
