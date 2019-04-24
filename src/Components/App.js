@@ -19,6 +19,7 @@ import Signin from "./Signin";
 import Register from "./Register";
 import Profile from "./Profile";
 import GroceryList from "./GroceryList";
+import Recipe from "./Recipe";
 
 import { UserProvider, UserConsumer } from "../Contexts/UserContext";
 
@@ -76,6 +77,7 @@ class App extends Component {
                     <RouteWithUser path="/signin" component={Signin} />
                     <RouteWithUser path="/register" component={Register} />
                     <RouteWithUser path="/profile" component={Profile} />
+                    <RouteWithUser path="/recipe" component={Recipe} />
                     <RouteWithUser
                       path="/grocerylist"
                       component={GroceryList}
