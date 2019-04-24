@@ -6,38 +6,35 @@ export class UserProvider extends Component {
   constructor(props) {
     super(props);
 
+    this.updateUser = this.updateUser.bind(this);
+
+    this.state = {
+      email: "",
+      name: "",
+      profilePicture: "",
+      inventory: [],
+      favorites: [],
+      groceryList: [],
+      updateUser: this.updateUser
+    };
+
     if (props.user && props.user.__typename === "User") {
-      this.state = props.user;
-    } else {
       this.state = {
-        email: "",
-        name: ""
+        ...this.state,
+        ...props.user
       };
     }
-
-    this.updateUser = this.updateUser.bind(this);
   }
 
-  updateUser(newUser) {
-    this.setState({
-      email: newUser.email,
-      name: newUser.name
-    });
+  updateUser(updatedUser) {
+    this.setState({ ...updatedUser });
   }
 
   render() {
     const { children } = this.props;
 
     return (
-      <UserContext.Provider
-        value={{
-          email: this.state.email,
-          name: this.state.name,
-          updateUser: this.updateUser
-        }}
-      >
-        {children}
-      </UserContext.Provider>
+      <UserContext.Provider value={this.state}>{children}</UserContext.Provider>
     );
   }
 }
