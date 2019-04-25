@@ -12,21 +12,12 @@ import { Link } from "react-router-dom";
 import passwordValidator from "password-validator";
 import emailValidator from "email-validator";
 
-import gql from "graphql-tag";
 import { Mutation } from "react-apollo";
+import { CREATE_USER } from "../graphql/mutations";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faLock } from "@fortawesome/free-solid-svg-icons";
 import CenterPageNav from "./Layout/CenterPageNav";
-
-const CREATE_USER = gql`
-  mutation createUser($email: String!, $password: String!, $name: String!) {
-    createUser(email: $email, password: $password, name: $name) {
-      email
-      name
-    }
-  }
-`;
 
 /**
  * The Component is a class that can have a state
@@ -290,7 +281,7 @@ class Register extends Component {
                   </Fragment>
                 );
               } else {
-                buttonText = "Sign in!";
+                buttonText = "Register!";
               }
 
               if (error) {

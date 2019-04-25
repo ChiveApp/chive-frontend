@@ -1,19 +1,8 @@
 import React, { Component } from "react";
 import { compose, graphql } from "react-apollo";
-import gql from "graphql-tag";
-import E503 from "./InfoPages/E503";
+import { LOGGED_IN_QUERY } from "../graphql/queries";
 
-const LOGGED_IN_QUERY = gql`
-  query {
-    loggedIn {
-      email
-      name
-      inventory {
-        name
-      }
-    }
-  }
-`;
+import E503 from "./InfoPages/E503";
 
 const LoadingScreen = () => {
   return <p />;

@@ -16,7 +16,7 @@ export default class FavoriteItem extends Component {
       <div
         className="d-flex flex-row align-items-center"
         style={{
-          marginTop: "20px"
+          marginBottom: "20px"
         }}
       >
         <img

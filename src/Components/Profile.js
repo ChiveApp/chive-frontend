@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import MarginPageNav from "./Layout/MarginPageNav";
 import "../styles/Profile.css";
 import FavoriteItemsList from "./FavoriteItemsList";
+import UploadAndCrop from "./UploadAndCrop";
 
 /**
  * TODO: clean code
@@ -21,7 +22,7 @@ export class Profile extends Component {
     return (
       <MarginPageNav {...this.props}>
         <div className="d-flex flex-row align-items-center">
-          <div className="imageContainer border border-dark rounded-circle">
+          <div className="imageContainer border border-dark rounded">
             <img
               src="images/profile.jpg"
               alt="Profile"
@@ -29,10 +30,10 @@ export class Profile extends Component {
               style={{ width: "100%" }}
             />
             <div className="middle">
-              <button className="text">Edit</button>
+              <UploadAndCrop {...this.props} />
             </div>
           </div>
-          <h1 className="ml-4">Ashna</h1>
+          <h2 className="ml-4">Kyle Helmick</h2>
         </div>
         <hr />
         <h2 style={{ marginBottom: "0px" }}>Favorites</h2>

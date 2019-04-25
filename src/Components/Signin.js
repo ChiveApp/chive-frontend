@@ -12,21 +12,11 @@ import { Link } from "react-router-dom";
 import emailValidator from "email-validator";
 
 import { Mutation } from "react-apollo";
-import gql from "graphql-tag";
+import { LOGIN_MUTATION } from "../graphql/mutations";
 
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSpinner, faLock } from "@fortawesome/free-solid-svg-icons";
 import CenterPageNav from "./Layout/CenterPageNav";
-
-const LOGIN_MUTATION = gql`
-  mutation login($email: String!, $password: String!) {
-    login(email: $email, password: $password) {
-      _id
-      email
-      name
-    }
-  }
-`;
 
 class Signin extends Component {
   constructor(props) {
@@ -135,6 +125,7 @@ class Signin extends Component {
               type="email"
               name="email"
               id="email"
+              autoComplete="email"
               placeholder="foodie67@chive.com"
               invalid={
                 !this.state.validEmail.valid &&
@@ -152,6 +143,7 @@ class Signin extends Component {
               type="password"
               name="password"
               id="password"
+              autoComplete="password"
               placeholder="secretPassword5!"
               invalid={
                 !this.state.validPassword.valid &&
