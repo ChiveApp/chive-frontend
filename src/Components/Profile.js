@@ -29,7 +29,7 @@ export class Profile extends Component {
   render() {
     var content = undefined;
     if (this.state.activeTab === "Favorites") {
-      content = <FavoriteItemsList {...this.props} />;
+      content = <FavoriteItemsList userContext={this.props.userContext} />;
     } else if (this.state.activeTab === "Inventory") {
       content = (
         <h2 style={{ marginTop: "1.5rem" }}>
@@ -37,7 +37,7 @@ export class Profile extends Component {
         </h2>
       );
     } else if (this.state.activeTab === "Grocery List") {
-      content = <GroceryItemsList {...this.props} />;
+      content = <GroceryItemsList userContext={this.props.userContext} />;
     }
     return (
       <MarginPageNav {...this.props}>

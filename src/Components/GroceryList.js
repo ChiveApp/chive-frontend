@@ -1,6 +1,6 @@
 import React from "react";
 
-import GroceryItem from "./GroceryItem";
+import { GroceryItem } from "./GroceryItem";
 
 /**
  * TODO:
@@ -20,6 +20,7 @@ const GroceryItemsList = props => {
       </h2>
     );
   }
+
   return groceryComponents;
 };
 

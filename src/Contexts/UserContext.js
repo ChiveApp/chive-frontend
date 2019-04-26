@@ -6,17 +6,20 @@ export class UserProvider extends Component {
   constructor(props) {
     super(props);
 
-    this.updateUser = this.updateUser.bind(this);
-
-    this.state = {
+    this.defaultContext = {
       email: "",
       name: "",
       profilePicture: "",
       inventory: [],
       favorites: [],
       groceryList: [],
-      updateUser: this.updateUser
+      updateUser: this.updateUser,
+      clearUser: this.clearUser
     };
+
+    this.updateUser = this.updateUser.bind(this);
+
+    this.state = this.defaultContext;
 
     if (props.user && props.user.__typename === "User") {
       this.state = {
@@ -26,9 +29,13 @@ export class UserProvider extends Component {
     }
   }
 
-  updateUser(updatedUser) {
-    this.setState({ ...updatedUser });
-  }
+  updateUser = updatedUser => {
+    this.setState(updatedUser);
+  };
+
+  clearUser = () => {
+    this.setState(this.defaultContext);
+  };
 
   render() {
     const { children } = this.props;

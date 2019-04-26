@@ -38,3 +38,14 @@ export const GET_GROCERY_ITEMS = gql`
     }
   }
 `;
+
+export const RECIPE_BY_NAME_QUERY = gql`
+  query recipeByName($name: String!) {
+    recipeByName(name: $name) {
+      name
+      rating
+      image
+      description
+    }
+  }
+`;

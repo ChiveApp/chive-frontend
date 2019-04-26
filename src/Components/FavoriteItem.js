@@ -17,7 +17,6 @@ export const FavoriteItem = ({ id }) => (
       if (loading) return "Loading...";
       if (error) return `Error! ${error.message}`;
 
-      console.log(data);
       const { recipeById } = data;
       return (
         <div

@@ -14,3 +14,18 @@ export const USER_FRAGMENT = gql`
     }
   }
 `;
+
+export const RECIPE_FRAGMENT = gql`
+  fragment details on Recipe {
+    _id
+    name
+    ingredients {
+      groupName
+      ingredients {
+        name
+        quantity
+        unit
+      }
+    }
+  }
+`;

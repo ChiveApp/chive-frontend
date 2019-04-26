@@ -12,6 +12,7 @@ const FavoriteItemsList = props => {
   var favoritesComponents = props.userContext.favorites.map(item => (
     <FavoriteItem {...props} id={item} key={item} />
   ));
+
   if (favoritesComponents.length === 0) {
     return (
       <h2 style={{ marginTop: "1.5rem" }}>
@@ -19,6 +20,7 @@ const FavoriteItemsList = props => {
       </h2>
     );
   }
+
   return favoritesComponents;
 };
 

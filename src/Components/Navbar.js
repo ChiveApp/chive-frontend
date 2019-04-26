@@ -39,14 +39,12 @@ export class Navbar extends Component {
   render() {
     const { loggedIn } = this.state;
 
-    console.log("Navbar props: ", this.props);
-
     const loggedInCollapse = (
       <Mutation
         mutation={LOGOUT_MUTATION}
         onCompleted={data => {
           if (data.logout) {
-            console.log("User should have lost cookie");
+            this.props.userContext.clearUser();
             this.props.history.push("/");
           }
         }}
@@ -71,7 +69,7 @@ export class Navbar extends Component {
                 </NavItem>
                 <NavItem>
                   {/* RECIPE SEARCH */}
-                  <NavLink tag={RouterNavLink} exact to="/recipe">
+                  <NavLink tag={RouterNavLink} exact to="/recipesearch">
                     Recipe Search
                   </NavLink>
                 </NavItem>
