@@ -97,7 +97,7 @@ export class RecipeSearch extends Component {
                 this.setState({ byName: !this.state.byName });
               }}
             >
-              {this.state.byName ? "Recipe Name" : "Recipe Ingredient"}
+              {this.state.byName ? "Name" : "Ingredient"}
             </Button>
           </InputGroupAddon>
           <Input

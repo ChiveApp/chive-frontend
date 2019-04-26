@@ -41,6 +41,26 @@ export const REMOVE_FAVORITE = gql`
   }
 `;
 
+export const ADD_GROCERY = gql`
+  ${USER_FRAGMENT}
+
+  mutation addGrocery($recipeId: ID!) {
+    addGrocery(recipeId: $recipeId) {
+      ...profile
+    }
+  }
+`;
+
+export const REMOVE_GROCERY = gql`
+  ${USER_FRAGMENT}
+
+  mutation removeGrocery($recipeId: ID!) {
+    removeGrocery(recipeId: $recipeId) {
+      ...profile
+    }
+  }
+`;
+
 export const LOGOUT_MUTATION = gql`
   mutation logout {
     logout

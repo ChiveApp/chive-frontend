@@ -21,7 +21,7 @@ const FavoriteItemsList = props => {
     );
   }
 
-  return favoritesComponents;
+  return <div style={{ marginTop: "1.5rem" }}>{favoritesComponents}</div>;
 };
 
 export default FavoriteItemsList;

@@ -1,6 +1,7 @@
 import React from "react";
 import { GET_GROCERY_ITEMS } from "./../graphql/queries";
 import { Query } from "react-apollo";
+import { Link } from "react-router-dom";
 
 /**
  * TODO:
@@ -39,7 +40,12 @@ export const GroceryItem = ({ id }) => (
       });
       return (
         <div>
-          <h2>{recipeById.name}</h2>
+          <Link
+            to={`/recipe/${recipeById._id}`}
+            style={{ textDecoration: "none", color: "black" }}
+          >
+            <h2>{recipeById.name}</h2>
+          </Link>
           {groupNames}
         </div>
       );

@@ -21,7 +21,7 @@ const GroceryItemsList = props => {
     );
   }
 
-  return groceryComponents;
+  return <div style={{ marginTop: "1.5rem" }}>{groceryComponents}</div>;
 };
 
 export default GroceryItemsList;

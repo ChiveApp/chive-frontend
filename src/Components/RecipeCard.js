@@ -9,6 +9,7 @@ import {
   Button
 } from "reactstrap";
 import { recipesURL } from "../configuration/config";
+import { Link } from "react-router-dom";
 
 const RecipeCard = props => {
   const image = props.image ? (
@@ -23,10 +24,14 @@ const RecipeCard = props => {
       <CardBody>
         <CardTitle>{props.name}</CardTitle>
         <CardSubtitle>Rating: {props.rating * 100}%</CardSubtitle>
-        <CardText>
-          {props.description && `${props.description.substring(0, 60)}...`}
-        </CardText>
-        <Button>View</Button>
+        {props.description && (
+          <CardText>{`${props.description.substring(0, 100)}...`}</CardText>
+        )}
+        <Link to={`/recipe/${props._id}`}>
+          <Button outline color="dark">
+            View
+          </Button>
+        </Link>
       </CardBody>
     </Card>
   );

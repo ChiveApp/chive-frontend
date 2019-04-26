@@ -2,6 +2,7 @@ import React from "react";
 import { Query } from "react-apollo";
 import { GET_FAVORITE_ITEM } from "./../graphql/queries";
 import { recipesURL } from "../configuration/config";
+import { Link } from "react-router-dom";
 
 /**
  * TODO:
@@ -19,36 +20,41 @@ export const FavoriteItem = ({ id }) => (
 
       const { recipeById } = data;
       return (
-        <div
-          className="d-flex flex-row align-items-center"
-          style={{
-            marginBottom: "20px"
-          }}
+        <Link
+          to={`/recipe/${recipeById._id}`}
+          style={{ textDecoration: "none", color: "black" }}
         >
-          <img
-            src={recipesURL + recipeById.image}
-            alt="Food"
+          <div
+            className="d-flex flex-row align-items-center"
             style={{
-              minWidth: "150px",
-              minHeight: "100px",
-              maxWidth: "150px",
-              maxHeight: "100px"
+              marginBottom: "20px"
             }}
-          />
-          <div className="d-flex flex-column" style={{ marginLeft: "10px" }}>
-            <h4
+          >
+            <img
+              src={recipesURL + recipeById.image}
+              alt="Food"
               style={{
-                margin: "0px",
-                padding: "0px"
+                minWidth: "150px",
+                minHeight: "100px",
+                maxWidth: "150px",
+                maxHeight: "100px"
               }}
-            >
-              {" "}
-              {recipeById.name}
-            </h4>
+            />
+            <div className="d-flex flex-column" style={{ marginLeft: "10px" }}>
+              <h4
+                style={{
+                  margin: "0px",
+                  padding: "0px"
+                }}
+              >
+                {" "}
+                {recipeById.name}
+              </h4>
 
-            <h5>Rating: {recipeById.rating * 100}%</h5>
+              <h5>Rating: {recipeById.rating * 100}%</h5>
+            </div>
           </div>
-        </div>
+        </Link>
       );
     }}
   </Query>

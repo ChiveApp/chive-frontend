@@ -19,11 +19,12 @@ import Signin from "./Signin";
 import Register from "./Register";
 import Profile from "./Profile";
 import GroceryList from "./GroceryList";
+import RecipeSearch from "./RecipeSearch";
+import Recipe from "./Recipe";
+import E404 from "./InfoPages/E404";
 
 import { UserProvider, UserConsumer } from "../Contexts/UserContext";
 import { AutoLogin } from "./AutoLogin";
-import E404 from "./InfoPages/E404";
-import RecipeSearch from "./RecipeSearch";
 
 library.add(fas);
 
@@ -93,6 +94,7 @@ class App extends Component {
                           path="/recipesearch"
                           component={RecipeSearch}
                         />
+                        <RouteWithUser path="/recipe/:id" component={Recipe} />
                         <Route component={E404} />
                       </Switch>
                     );

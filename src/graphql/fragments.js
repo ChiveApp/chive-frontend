@@ -19,6 +19,11 @@ export const RECIPE_FRAGMENT = gql`
   fragment details on Recipe {
     _id
     name
+    directions
+    rating
+    source
+    siteName
+    image
     ingredients {
       groupName
       ingredients {
