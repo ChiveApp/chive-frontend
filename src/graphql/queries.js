@@ -10,3 +10,14 @@ export const LOGGED_IN_QUERY = gql`
     }
   }
 `;
+
+export const GET_FAVORITE_ITEM = gql`
+  query recipeById($id: ID!) {
+    recipeById(id: $id) {
+      _id
+      name
+      rating
+      image
+    }
+  }
+`;

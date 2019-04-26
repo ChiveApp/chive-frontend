@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 
-import FavoriteItem from "./FavoriteItem";
+import { FavoriteItem } from "./FavoriteItem";
 
 /**
  * TODO:
@@ -12,38 +12,12 @@ export default class FavoriteItemsList extends Component {
   render() {
     var favorites = [
       {
-        name: "Chicken Stir Fry",
-        rating: "4.5",
-        time: "30 mins",
-        image: "images/favrecppic.jpg"
-      },
-      {
-        name: "Chicken Lo Mein",
-        rating: "4.5",
-        time: "30 mins",
-        image: "images/favrecppic.jpg"
-      },
-      {
-        name: "Vegans r kewl",
-        rating: "4.5",
-        time: "30 mins",
-        image: "images/favrecppic.jpg"
-      },
-      {
-        name: "but plants feel pain",
-        rating: "4.5",
-        time: "30 mins",
-        image: "images/favrecppic.jpg"
+        id: "5cc2565774b9eb5f4a29447e"
       }
     ];
+
     var favoritesComponents = favorites.map(item => (
-      <FavoriteItem
-        name={item.name}
-        rating={item.rating}
-        time={item.time}
-        image={item.image}
-        key={favorites.indexOf(item)}
-      />
+      <FavoriteItem id={item.id} key={item.id} />
     ));
     return favoritesComponents;
   }

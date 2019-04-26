@@ -12,7 +12,7 @@ import { createUploadLink } from "apollo-upload-client";
 import { onError } from "apollo-link-error";
 import { ApolloLink } from "apollo-link";
 
-import { apiURL } from "../configuration/config";
+import { graphqlURL } from "../configuration/config";
 
 import Landing from "./slides/Landing";
 import Signin from "./Signin";
@@ -39,7 +39,7 @@ const client = new ApolloClient({
       if (networkError) console.log(`[Network error]: ${networkError}`);
     }),
     new createUploadLink({
-      uri: apiURL,
+      uri: graphqlURL,
       credentials: "include"
     })
   ]),

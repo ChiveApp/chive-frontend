@@ -1,6 +1,7 @@
-import React, { Component } from "react";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHourglassHalf } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
+import { Query } from "react-apollo";
+import { GET_FAVORITE_ITEM } from "./../graphql/queries";
+import { recipesURL } from "../configuration/config";
 
 /**
  * TODO:
@@ -10,37 +11,41 @@ import { faHourglassHalf } from "@fortawesome/free-solid-svg-icons";
  * - make sure it's responsive
  */
 
-export default class FavoriteItem extends Component {
-  render() {
-    return (
-      <div
-        className="d-flex flex-row align-items-center"
-        style={{
-          marginBottom: "20px"
-        }}
-      >
-        <img
-          src={this.props.image}
-          alt="Food"
-          style={{ width: "100px", height: "100px" }}
-        />
-        <div className="d-flex flex-column" style={{ marginLeft: "20px" }}>
-          <h4
-            style={{
-              margin: "0px",
-              padding: "0px"
-            }}
-          >
-            {" "}
-            {this.props.name}
-          </h4>
+export const FavoriteItem = ({ id }) => (
+  <Query query={GET_FAVORITE_ITEM} variables={{ id }}>
+    {({ loading, error, data }) => {
+      if (loading) return "Loading...";
+      if (error) return `Error! ${error.message}`;
 
-          <span>
-            <FontAwesomeIcon icon={faHourglassHalf} /> {this.props.time}{" "}
-            {this.props.rating}
-          </span>
+      console.log(data);
+      const { recipeById } = data;
+      return (
+        <div
+          className="d-flex flex-row align-items-center"
+          style={{
+            marginBottom: "20px"
+          }}
+        >
+          <img
+            src={recipesURL + recipeById.image}
+            alt="Food"
+            style={{ width: "100px", height: "100px" }}
+          />
+          <div className="d-flex flex-column" style={{ marginLeft: "20px" }}>
+            <h4
+              style={{
+                margin: "0px",
+                padding: "0px"
+              }}
+            >
+              {" "}
+              {recipeById.name}
+            </h4>
+
+            <h5>Rating: {recipeById.rating}</h5>
+          </div>
         </div>
-      </div>
-    );
-  }
-}
+      );
+    }}
+  </Query>
+);

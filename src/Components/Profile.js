@@ -3,6 +3,7 @@ import MarginPageNav from "./Layout/MarginPageNav";
 import "../styles/Profile.css";
 import FavoriteItemsList from "./FavoriteItemsList";
 import UploadAndCrop from "./UploadAndCrop";
+import { uploadsURL } from "../configuration/config";
 
 /**
  * TODO: clean code
@@ -24,7 +25,7 @@ export class Profile extends Component {
         <div className="d-flex flex-row align-items-center">
           <div className="imageContainer border border-dark rounded">
             <img
-              src="images/profile.jpg"
+              src={uploadsURL + this.props.userContext.profilePicture}
               alt="Profile"
               className="profileImage"
               style={{ width: "100%" }}
@@ -33,9 +34,23 @@ export class Profile extends Component {
               <UploadAndCrop {...this.props} />
             </div>
           </div>
-          <h2 className="ml-4">Kyle Helmick</h2>
+          <h2 className="ml-4">{this.props.userContext.name}</h2>
         </div>
         <hr />
+        <ul className="nav nav-pills nav-fill">
+          <li className="nav-item">
+            <div className="nav-link active">Active</div>
+          </li>
+          <li className="nav-item">
+            <div className="nav-link">Longer nav link</div>
+          </li>
+          <li className="nav-item">
+            <div className="nav-link">Link</div>
+          </li>
+          <li className="nav-item">
+            <div className="nav-link disabled">Disabled</div>
+          </li>
+        </ul>{" "}
         <h2 style={{ marginBottom: "0px" }}>Favorites</h2>
         <hr />
         <FavoriteItemsList />
