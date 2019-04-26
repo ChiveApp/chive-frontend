@@ -135,7 +135,7 @@ export default class UploadAndCrop extends Component {
                       this.onSelectFile(file);
                     }}
                     onDropRejected={() => {
-                      console.log("File rejected");
+                      console.error("File rejected");
                     }}
                   >
                     {({ getRootProps, getInputProps }) => (

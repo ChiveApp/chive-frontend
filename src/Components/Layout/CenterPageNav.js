@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../Navbar";
 
-function CenterPageNav(props) {
+const CenterPageNav = props => {
   return (
     <div
       className="d-flex flex-column"
@@ -15,6 +15,6 @@ function CenterPageNav(props) {
       </div>
     </div>
   );
-}
+};
 
 export default CenterPageNav;

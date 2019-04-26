@@ -53,7 +53,7 @@ export class Profile extends Component {
         </ul>{" "}
         <h2 style={{ marginBottom: "0px" }}>Favorites</h2>
         <hr />
-        <FavoriteItemsList />
+        <FavoriteItemsList {...this.props} />
       </MarginPageNav>
     );
   }

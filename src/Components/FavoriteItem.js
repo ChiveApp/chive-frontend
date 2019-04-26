@@ -29,9 +29,14 @@ export const FavoriteItem = ({ id }) => (
           <img
             src={recipesURL + recipeById.image}
             alt="Food"
-            style={{ width: "100px", height: "100px" }}
+            style={{
+              minWidth: "150px",
+              minHeight: "100px",
+              maxWidth: "150px",
+              maxHeight: "100px"
+            }}
           />
-          <div className="d-flex flex-column" style={{ marginLeft: "20px" }}>
+          <div className="d-flex flex-column" style={{ marginLeft: "10px" }}>
             <h4
               style={{
                 margin: "0px",
@@ -42,7 +47,7 @@ export const FavoriteItem = ({ id }) => (
               {recipeById.name}
             </h4>
 
-            <h5>Rating: {recipeById.rating}</h5>
+            <h5>Rating: {recipeById.rating * 100}%</h5>
           </div>
         </div>
       );

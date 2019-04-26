@@ -1,12 +1,12 @@
 var environmentKeys = [
   "REACT_APP_GRAPHQL_URL",
-  "REACT_APP_UPLOADS_URL",
-  "REACT_APP_RECIPES_URL"
+  "REACT_APP_RECIPES_URL",
+  "REACT_APP_UPLOADS_URL"
 ];
 
 environmentKeys = environmentKeys.filter(key => {
   if (typeof process.env[key] === "undefined") {
-    return true; // [key is present, key name]
+    return true;
   }
   return false;
 });

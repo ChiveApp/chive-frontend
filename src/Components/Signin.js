@@ -158,12 +158,7 @@ class Signin extends Component {
           <Mutation
             mutation={LOGIN_MUTATION}
             onCompleted={({ login }) => {
-              console.log("LOGIN: ", login);
-              // TODO: updated context with extended user after backend update
-              this.props.userContext.updateUser({
-                email: login.email,
-                name: login.name
-              });
+              this.props.userContext.updateUser(login);
               this.props.history.push("/profile");
             }}
           >

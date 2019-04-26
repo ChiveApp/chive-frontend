@@ -264,10 +264,7 @@ class Register extends Component {
           <Mutation
             mutation={CREATE_USER}
             onCompleted={({ createUser }) => {
-              this.props.userContext.updateUser({
-                email: createUser.email,
-                name: createUser.name
-              });
+              this.props.userContext.updateUser(createUser);
               this.props.history.push("/profile");
             }}
           >

@@ -29,7 +29,7 @@ export class Recipe extends Component {
           height: "100vh"
         }}
       >
-        <Navbar />
+        <Navbar {...this.props} />
 
         <div className="d-flex container flex-column flex-fill mt-5">
           <img
@@ -49,9 +49,7 @@ export class Recipe extends Component {
           >
             {name}
           </h2>
-          <h5 className="align-self-center">
-            {rating}{" "}
-          </h5>
+          <h5 className="align-self-center">{rating} </h5>
           <p />
           <div
             className="container"

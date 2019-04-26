@@ -1,11 +1,11 @@
 import React from "react";
-import CenterPageNav from "../Layout/CenterPageNav";
+import CenterPage from "../Layout/CenterPage";
 import { Jumbotron, Button } from "reactstrap";
 import { Link } from "react-router-dom";
 
 const Oops = props => {
   return (
-    <CenterPageNav>
+    <CenterPage>
       <Jumbotron>
         <h1 className="display-5">
           {props.errorCode || "Whoa"}:{" "}
@@ -21,7 +21,7 @@ const Oops = props => {
           </Button>
         </Link>
       </Jumbotron>
-    </CenterPageNav>
+    </CenterPage>
   );
 };
 

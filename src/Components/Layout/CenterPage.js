@@ -1,7 +1,6 @@
 import React from "react";
-import Navbar from "../Navbar";
 
-const MarginPageNav = props => {
+const CenterPage = props => {
   return (
     <div
       className="d-flex flex-column"
@@ -9,12 +8,11 @@ const MarginPageNav = props => {
         height: "100vh"
       }}
     >
-      <Navbar {...props} />
-      <div className="d-flex container flex-column flex-fill mt-5">
+      <div className="d-flex flex-fill flex-column justify-content-center align-items-center">
         {props.children}
       </div>
     </div>
   );
 };
 
-export default MarginPageNav;
+export default CenterPage;

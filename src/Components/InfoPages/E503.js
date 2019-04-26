@@ -1,7 +1,7 @@
 import React from "react";
 import Oops from "./Oops";
 
-function E503() {
+const E503 = () => {
   return (
     <Oops
       {...{
@@ -12,6 +12,6 @@ function E503() {
       }}
     />
   );
-}
+};
 
 export default E503;

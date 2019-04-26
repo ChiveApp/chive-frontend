@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 
 import { FavoriteItem } from "./FavoriteItem";
 
@@ -8,17 +8,12 @@ import { FavoriteItem } from "./FavoriteItem";
  * - pictures???
  */
 
-export default class FavoriteItemsList extends Component {
-  render() {
-    var favorites = [
-      {
-        id: "5cc2565774b9eb5f4a29447e"
-      }
-    ];
+const FavoriteItemsList = props => {
+  var favoritesComponents = props.userContext.favorites.map(item => (
+    <FavoriteItem {...props} id={item} key={item} />
+  ));
 
-    var favoritesComponents = favorites.map(item => (
-      <FavoriteItem id={item.id} key={item.id} />
-    ));
-    return favoritesComponents;
-  }
-}
+  return favoritesComponents;
+};
+
+export default FavoriteItemsList;

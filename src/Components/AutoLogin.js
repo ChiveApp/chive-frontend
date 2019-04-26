@@ -22,6 +22,8 @@ class AutoLoginComponent extends Component {
       return ErrorScreen();
     }
 
+    console.log("loggedIn: ", this.props.data.loggedIn);
+
     const childrenWithProps = React.Children.map(this.props.children, child =>
       React.cloneElement(child, { user: this.props.data.loggedIn })
     );

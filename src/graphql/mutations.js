@@ -23,6 +23,7 @@ export const LOGIN_MUTATION = gql`
 
 export const ADD_FAVORITE = gql`
   ${USER_FRAGMENT}
+
   mutation addFavorite($recipeId: ID!) {
     addFavorite(recipeId: $recipeId) {
       ...profile
@@ -32,9 +33,16 @@ export const ADD_FAVORITE = gql`
 
 export const REMOVE_FAVORITE = gql`
   ${USER_FRAGMENT}
+
   mutation removeFavorite($recipeId: ID!) {
     removeFavorite(recipeId: $recipeId) {
       ...profile
     }
+  }
+`;
+
+export const LOGOUT_MUTATION = gql`
+  mutation logout {
+    logout
   }
 `;
