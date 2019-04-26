@@ -21,3 +21,20 @@ export const GET_FAVORITE_ITEM = gql`
     }
   }
 `;
+
+export const GET_GROCERY_ITEMS = gql`
+  query recipeById($id: ID!) {
+    recipeById(id: $id) {
+      _id
+      name
+      ingredients {
+        groupName
+        ingredients {
+          name
+          quantity
+          unit
+        }
+      }
+    }
+  }
+`;

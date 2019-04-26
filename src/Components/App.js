@@ -24,6 +24,7 @@ import Recipe from "./Recipe";
 import { UserProvider, UserConsumer } from "../Contexts/UserContext";
 import { AutoLogin } from "./AutoLogin";
 import E404 from "./InfoPages/E404";
+import test from "./GroceryItem";
 
 library.add(fas);
 
@@ -32,11 +33,11 @@ const client = new ApolloClient({
     onError(({ graphQLErrors, networkError }) => {
       if (graphQLErrors)
         graphQLErrors.map(({ message, locations, path }) =>
-          console.error(
+          console.log(
             `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
           )
         );
-      if (networkError) console.error(`[Network error]: ${networkError}`);
+      if (networkError) console.log(`[Network error]: ${networkError}`);
     }),
     new createUploadLink({
       uri: graphqlURL,
@@ -53,6 +54,7 @@ class App extends Component {
         <BrowserRouter>
           <Switch>
             <Route exact path="/" component={Landing} />
+            <Route path="/test" component={test} />
             <AutoLogin>
               <UserProvider>
                 <UserConsumer>

@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from "react";
-import Navbar from "./Navbar";
+import React from "react";
 
 import GroceryItem from "./GroceryItem";
 
@@ -9,43 +8,19 @@ import GroceryItem from "./GroceryItem";
  * - pictures???
  */
 
-export default class GroceryList extends Component {
-  render() {
-    var groceries = [
-      {
-        quantity: "10",
-        unit: "ounces",
-        name: "oil"
-      },
-      {
-        quantity: "6",
-        unit: "cans",
-        name: "peach"
-      },
-      {
-        quantity: "1",
-        unit: "",
-        name: "Bell pepper"
-      }
-    ];
+const GroceryItemsList = props => {
+  var groceryComponents = props.userContext.groceryList.map(item => (
+    <GroceryItem {...props} id={item} key={item} />
+  ));
 
-    var groceryComponents = groceries.map(item => (
-      <GroceryItem
-        imageSrc={"images/bellpepper.jpg"}
-        quantity={item.quantity}
-        unit={item.unit}
-        name={item.name}
-        key={groceries.indexOf(item)}
-      />
-    ));
-
+  if (groceryComponents.length === 0) {
     return (
-      <Fragment>
-        <Navbar />
-        <div className="d-flex flex-column align-self-center container">
-          {groceryComponents}
-        </div>
-      </Fragment>
+      <h2 style={{ marginTop: "1.5rem" }}>
+        Nothing's here! Add a recipe to grow your list.
+      </h2>
     );
   }
-}
+  return groceryComponents;
+};
+
+export default GroceryItemsList;

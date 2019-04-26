@@ -4,7 +4,9 @@ import "../styles/Profile.css";
 import FavoriteItemsList from "./FavoriteItemsList";
 import UploadAndCrop from "./UploadAndCrop";
 import { uploadsURL } from "../configuration/config";
-
+import GroceryItemsList from "./GroceryList";
+import { NavLink, Nav, NavItem } from "reactstrap";
+import classnames from "classnames";
 /**
  * TODO: clean code
  * TODO: make sure it's responsive
@@ -17,15 +19,34 @@ export class Profile extends Component {
     if (props.userContext.email === "" && props.userContext.name === "") {
       this.props.history.push("/signin");
     }
+    this.state = { activeTab: "Favorites" };
   }
 
+  toggle = tab => {
+    if (tab !== this.state.activeTab) this.setState({ activeTab: tab });
+  };
+
   render() {
+    var content = undefined;
+    if (this.state.activeTab === "Favorites") {
+      content = <FavoriteItemsList {...this.props} />;
+    } else if (this.state.activeTab === "Inventory") {
+      content = (
+        <h2 style={{ marginTop: "1.5rem" }}>
+          Sorry for the dust! We're under construction.
+        </h2>
+      );
+    } else if (this.state.activeTab === "Grocery List") {
+      content = <GroceryItemsList {...this.props} />;
+    }
     return (
       <MarginPageNav {...this.props}>
         <div className="d-flex flex-row align-items-center">
           <div className="imageContainer border border-dark rounded">
             <img
-              src={uploadsURL + this.props.userContext.profilePicture}
+              src={`${uploadsURL}${
+                this.props.userContext.profilePicture
+              }?${new Date().getTime()}`}
               alt="Profile"
               className="profileImage"
               style={{ width: "100%" }}
@@ -37,23 +58,45 @@ export class Profile extends Component {
           <h2 className="ml-4">{this.props.userContext.name}</h2>
         </div>
         <hr />
-        <ul className="nav nav-pills nav-fill">
-          <li className="nav-item">
-            <div className="nav-link active">Active</div>
-          </li>
-          <li className="nav-item">
-            <div className="nav-link">Longer nav link</div>
-          </li>
-          <li className="nav-item">
-            <div className="nav-link">Link</div>
-          </li>
-          <li className="nav-item">
-            <div className="nav-link disabled">Disabled</div>
-          </li>
-        </ul>{" "}
-        <h2 style={{ marginBottom: "0px" }}>Favorites</h2>
-        <hr />
-        <FavoriteItemsList {...this.props} />
+        <Nav tabs>
+          <NavItem>
+            <NavLink
+              className={classnames({
+                active: this.state.activeTab === "Favorites"
+              })}
+              onClick={() => {
+                this.toggle("Favorites");
+              }}
+            >
+              Favorites
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({
+                active: this.state.activeTab === "Inventory"
+              })}
+              onClick={() => {
+                this.toggle("Inventory");
+              }}
+            >
+              Inventory
+            </NavLink>
+          </NavItem>
+          <NavItem>
+            <NavLink
+              className={classnames({
+                active: this.state.activeTab === "Grocery List"
+              })}
+              onClick={() => {
+                this.toggle("Grocery List");
+              }}
+            >
+              Grocery List
+            </NavLink>
+          </NavItem>
+        </Nav>
+        {content}
       </MarginPageNav>
     );
   }
