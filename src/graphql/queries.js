@@ -49,3 +49,14 @@ export const RECIPE_BY_NAME_QUERY = gql`
     }
   }
 `;
+
+export const RECIPE_BY_INGREDIENTS_QUERY = gql`
+  query recipeByIngredients($ingredients: [String!]!) {
+    recipeByIngredients(ingredients: $ingredients) {
+      name
+      rating
+      image
+      description
+    }
+  }
+`;

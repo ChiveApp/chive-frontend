@@ -7,8 +7,11 @@ import {
   CardColumns
 } from "reactstrap";
 import MarginPageNav from "./Layout/MarginPageNav";
-import { Query } from "react-apollo";
-import { RECIPE_BY_NAME_QUERY } from "../graphql/queries";
+import { ApolloConsumer } from "react-apollo";
+import {
+  RECIPE_BY_NAME_QUERY,
+  RECIPE_BY_INGREDIENTS_QUERY
+} from "../graphql/queries";
 import RecipeCard from "./RecipeCard";
 
 export class RecipeSearch extends Component {
@@ -20,7 +23,8 @@ export class RecipeSearch extends Component {
       recipeName: "",
       recipeIngredients: [],
       tempIngredient: "",
-      submitted: false
+      submitted: false,
+      recipes: []
     };
   }
 
@@ -113,38 +117,41 @@ export class RecipeSearch extends Component {
           ""
         )}
         <div className="d-flex justify-content-center">
-          <Button
-            onClick={this.handleSearch}
-            outline
-            style={{ marginBottom: "1.5rem", width: "50%" }}
-          >
-            Search!
-          </Button>
+          <ApolloConsumer>
+            {client => (
+              <Button
+                onClick={async () => {
+                  const { data } = await client.query({
+                    query: this.state.byName
+                      ? RECIPE_BY_NAME_QUERY
+                      : RECIPE_BY_INGREDIENTS_QUERY,
+                    variables: this.state.byName
+                      ? { name: this.state.recipeName }
+                      : { ingredients: this.state.recipeIngredients }
+                  });
+
+                  var recipes = undefined;
+
+                  if (this.state.byName) {
+                    recipes = data.recipeByName;
+                  } else {
+                    recipes = data.recipeByIngredients;
+                  }
+
+                  this.setState({ recipes: recipes });
+                }}
+                outline
+                style={{ marginBottom: "1.5rem", width: "50%" }}
+              >
+                Search!
+              </Button>
+            )}
+          </ApolloConsumer>
         </div>
         <CardColumns>
-          {this.state.byName ? (
-            <Query
-              query={RECIPE_BY_NAME_QUERY}
-              variables={{ name: this.state.recipeName }}
-            >
-              {({ data, loading, error }) => {
-                if (loading) {
-                  return <p>Loading...</p>;
-                }
-                if (error) {
-                  return <p>{error}</p>;
-                }
-
-                const { recipeByName } = data;
-
-                return recipeByName.map((recipe, index) => {
-                  return <RecipeCard {...recipe} key={index} />;
-                });
-              }}
-            </Query>
-          ) : (
-            ""
-          )}
+          {this.state.recipes.map((recipe, index) => {
+            return <RecipeCard {...recipe} key={index} />;
+          })}
         </CardColumns>
       </MarginPageNav>
     );
